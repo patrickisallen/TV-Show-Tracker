@@ -18,6 +18,10 @@ var UserSchema = new Schema({
         type: String,
         required: true
   }
+  movielist:
+  {
+    type: Schema.ObjectID
+  }
 });
 
 UserSchema.virtual('url')
