@@ -5,22 +5,22 @@ var autoIncrement = require('./AutoIncrement.js')
 
 var UserSchema = new Schema({
   username: {
-        type: String,
-        unique: true,
-        required: true
+      type: String,
+      unique: true,
+      required: true
   },
   email: {
-        type: String,
-        unique: true,
-        required: true
+      type: String,
+      unique: true,
+      required: true
   },
   password: {
-        type: String,
-        required: true
-  }
-  movielist:
-  {
-    type: Schema.ObjectID
+      type: String,
+      required: true
+  },
+  movielist: {
+      type: Schema.ObjectId,
+      required: true
   }
 });
 

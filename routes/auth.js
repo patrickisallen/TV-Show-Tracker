@@ -6,16 +6,26 @@ var express = require('express');
 var jwt = require('jsonwebtoken');
 var router = express.Router();
 var User = require("../models/user");
+var MovieList = require("../models/movielist")
 
 router.post('/register', function(req, res) {
     if (!req.body.username || !req.body.email || !req.body.password) {
       res.json({success: false, msg: 'Please pass username and password.'});
     } else {
+      var newMovieList = new MovieList();
+
       var newUser = new User({
         username: req.body.username,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        movielist: newMovieList._id
       });
+
+      // save the movielist
+      newMovieList.save(function(err) {
+        if (err) throw err
+      });
+
       // save the user
       newUser.save(function(err) {
         if (err) {
