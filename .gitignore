@@ -3,6 +3,9 @@
 # dependencies
 /node_modules
 
+# database
+/data
+
 # testing
 /coverage
 

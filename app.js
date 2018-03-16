@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 
-//Added routes for said APIs 
+//Added routes for said APIs
 var movie = require('./routes/movie');
 var movieUnsecure = require('./routes/movie-unsecure');
 var auth = require('./routes/auth');
@@ -43,4 +43,5 @@ mongoose.Promise = require('bluebird');
 mongoose.connect('mongodb://localhost/movie-tracker', { promiseLibrary: require('bluebird') })
   .then(() =>  console.log('connection succesful'))
   .catch((err) => console.error(err));
+
 module.exports = app;

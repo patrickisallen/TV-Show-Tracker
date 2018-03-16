@@ -37,7 +37,7 @@ class App extends Component {
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">
-              MOVIE COLLECTION &nbsp;
+              Movie Collection &nbsp;
               {localStorage.getItem('jwtToken') &&
                 <button class="btn btn-primary" onClick={this.logout}>Logout</button>
               }

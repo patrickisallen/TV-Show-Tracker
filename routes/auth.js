@@ -8,11 +8,12 @@ var router = express.Router();
 var User = require("../models/user");
 
 router.post('/register', function(req, res) {
-    if (!req.body.username || !req.body.password) {
+    if (!req.body.username || !req.body.email || !req.body.password) {
       res.json({success: false, msg: 'Please pass username and password.'});
     } else {
       var newUser = new User({
         username: req.body.username,
+        email: req.body.email,
         password: req.body.password
       });
       // save the user
@@ -30,7 +31,7 @@ router.post('/register', function(req, res) {
       username: req.body.username
     }, function(err, user) {
       if (err) throw err;
-  
+
       if (!user) {
         res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
       } else {

@@ -1,17 +1,29 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
+var autoIncrement = require('./AutoIncrement.js')
 
 var UserSchema = new Schema({
   username: {
         type: String,
         unique: true,
         required: true
-    },
+  },
+  email: {
+        type: String,
+        unique: true,
+        required: true
+  },
   password: {
         type: String,
         required: true
-    }
+  }
+});
+
+UserSchema.virtual('url')
+
+UserSchema.get(function () {
+    return '/user/' + this._id;
 });
 
 UserSchema.pre('save', function (next) {
@@ -42,5 +54,12 @@ UserSchema.methods.comparePassword = function (passw, cb) {
         cb(null, isMatch);
     });
 };
+
+var options = {
+    model: 'User',
+    startAt: 10000000,
+    incrementBy: 1
+}
+UserSchema.plugin(autoIncrement.plugin, options);
 
 module.exports = mongoose.model('User', UserSchema);
