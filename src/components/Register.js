@@ -37,7 +37,7 @@ class Create extends Component {
       <div class="container">
         <form class="form-signin" onSubmit={this.onSubmit}>
           <h2 class="form-signin-heading">Register</h2>
-          <label for="inputUsername" class="sr-only">Email address</label>
+          <label for="inputUsername" class="sr-only">Username</label>
           <input type="text" class="form-control" placeholder="Username" name="username" value={username} onChange={this.onChange} required/>
           <label for="inputEmail" class="sr-only">Email address</label>
           <input type="email" class="form-control" placeholder="Email address" name="email" value={email} onChange={this.onChange} required/>
