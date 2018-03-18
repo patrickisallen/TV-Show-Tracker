@@ -11,7 +11,7 @@ import './Footer.css'
 class Footer extends Component {
 
   onToggle = (e) => {
-    return getMuiTheme(darkBaseTheme);
+    alert("Pretend it is dark theme for now");
   }
 
   render() {
