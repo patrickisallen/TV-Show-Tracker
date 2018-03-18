@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -32,22 +38,39 @@ class Create extends Component {
   }
 
   render() {
-    const { username, email, password } = this.state;
     return (
-      <div class="container">
-        <form class="form-signin" onSubmit={this.onSubmit}>
-          <h2 class="form-signin-heading">Register</h2>
-          <label for="inputUsername" class="sr-only">Username</label>
-          <input type="text" class="form-control" placeholder="Username" name="username" value={username} onChange={this.onChange} required/>
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" class="form-control" placeholder="Email address" name="email" value={email} onChange={this.onChange} required/>
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" class="form-control" placeholder="Password" name="password" value={password} onChange={this.onChange} required/>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-        </form>
-      </div>
+      <MuiThemeProvider>
+        <div class="container">
+          <AppBar title="Register"/>
+            <TextField
+              hintText="Enter your User Name"
+              floatingLabelText="User Name"
+              onChange = {(event,newValue) => this.setState({username:newValue})}
+              />
+            <br/>
+            <TextField
+              hintText="Enter your Email"
+              type="email"
+              floatingLabelText="Email"
+              onChange = {(event,newValue) => this.setState({email:newValue})}
+              />
+            <br/>
+            <TextField
+              type = "password"
+              hintText="Enter your Password"
+              floatingLabelText="Password"
+              onChange = {(event,newValue) => this.setState({password:newValue})}
+              />
+            <br/>
+            <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>   
+        </div>
+        </MuiThemeProvider>
     );
   }
 }
+
+const style = {
+  margin: 15,
+};
 
 export default Create;
