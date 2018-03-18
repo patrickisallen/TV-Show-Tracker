@@ -10,6 +10,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './Login.css';
 
+import Footer from './Footer.js';
+
 class Login extends Component {
 
   constructor() {
@@ -74,6 +76,8 @@ class Login extends Component {
           <p>
           Not a member? <Link to="/register"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
           </p>
+        
+          <Footer/>
         </div>
       </MuiThemeProvider>      
     );

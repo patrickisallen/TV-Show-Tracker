@@ -10,6 +10,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './Login.css';
 
+var Footer = require('./Footer.js');
+
 class Create extends Component {
 
   constructor() {
@@ -63,6 +65,7 @@ class Create extends Component {
               />
             <br/>
             <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>   
+        
         </div>
         </MuiThemeProvider>
     );

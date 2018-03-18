@@ -1,0 +1,9 @@
+.footer-container {
+  height: 64px;
+  background: darkgray;
+}
+
+.dark-mode-container {
+  width: 128px;
+  float: right;
+}
