@@ -43,8 +43,8 @@ class Create extends Component {
         <div class="container">
           <AppBar title="Register"/>
             <TextField
-              hintText="Enter your User Name"
-              floatingLabelText="User Name"
+              hintText="Enter your Username"
+              floatingLabelText="Username"
               onChange = {(event,newValue) => this.setState({username:newValue})}
               />
             <br/>
