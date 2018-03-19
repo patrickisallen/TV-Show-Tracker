@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './Login.css';
+
+import Footer from './Footer.js';
 
 class Login extends Component {
 
@@ -41,26 +49,42 @@ class Login extends Component {
   render() {
     const { username, password, message } = this.state;
     return (
-      <div class="container">
-        <form class="form-signin" onSubmit={this.onSubmit}>
+      <MuiThemeProvider>
+        <div class="container">
           {message !== '' &&
             <div class="alert alert-warning alert-dismissible" role="alert">
               { message }
             </div>
           }
-          <h2 class="form-signin-heading">Please sign in</h2>
-          <label for="inputUsername" class="sr-only">Username</label>
-          <input type="text" class="form-control" placeholder="Username" name="username" value={username} onChange={this.onChange} required/>
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" class="form-control" placeholder="Password" name="password" value={password} onChange={this.onChange} required/>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+          <AppBar
+            title="Login"
+          />
+          <TextField
+            hintText="Enter your Username"
+            floatingLabelText="Username"
+            onChange = {(event,newValue) => this.setState({username:newValue})}
+          />
+          <br/>
+          <TextField
+            type="password"
+            hintText="Enter your Password"
+            floatingLabelText="Password"
+            onChange = {(event,newValue) => this.setState({password:newValue})}
+          />
+          <br/>
+          <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>
           <p>
-            Not a member? <Link to="/register"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
+          Not a member? <Link to="/register"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
           </p>
-        </form>
-      </div>
+        
+          <Footer/>
+        </div>
+      </MuiThemeProvider>      
     );
   }
 }
 
+const style = {
+  margin: 15,
+ };
 export default Login;

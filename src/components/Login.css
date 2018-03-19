@@ -44,3 +44,7 @@ body {
   .form-signin p {
     margin-top: 10px;
   }
+
+  TextField {
+    align-self: center;
+  }
