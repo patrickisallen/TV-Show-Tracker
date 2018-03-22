@@ -5,8 +5,8 @@ require('../config/passport')(passport);
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var router = express.Router();
-var User = require("../models/user");
-var MovieList = require("../models/movielist")
+var User = require("../models/User");
+var MovieList = require("../models/MovieList")
 
 router.post('/register', function(req, res) {
     if (!req.body.username || !req.body.email || !req.body.password) {

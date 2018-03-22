@@ -31,6 +31,20 @@ router.get('/', passport.authenticate('jwt', { session: false}), function(req, r
     }
   });
 
+/* SEARCH MOVIES */
+router.get('/search', passport.authenticate('jwt', { session: false}), function(req, res) {
+    var token = getToken(req.headers);
+    var searchString = req.query.title;
+    if (token) {
+        Movie.find({'isbn': searchString},function (err, movies) {
+            if (err) return next(err);
+            res.json(movies);
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized.'});
+    }
+});
+
 /* SAVE MOVIE */
 router.post('/', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
