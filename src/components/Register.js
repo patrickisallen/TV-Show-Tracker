@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -41,7 +43,7 @@ class Create extends Component {
 
   render() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
         <div class="container">
           <AppBar title="Register"/>
             <TextField
@@ -65,7 +67,6 @@ class Create extends Component {
               />
             <br/>
             <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>   
-          <Footer />
         </div>
         </MuiThemeProvider>
     );

@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
 
@@ -88,7 +91,9 @@ class App extends Component {
             onChange: this.onChange
         };
 
-        return <div class="container">
+        return (
+        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+          <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -128,6 +133,8 @@ class App extends Component {
                 </div>
             </div>
         </div>;
+        </MuiThemeProvider>
+        );
     }
 }
 
