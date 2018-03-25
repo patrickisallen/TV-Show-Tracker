@@ -5,7 +5,8 @@ import Autosuggest from 'react-autosuggest';
 import './App.css';
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
-
+const URL_IMG = 'https://image.tmdb.org/t/p/';
+const IMG_SIZE_XSMALL = 'w45/';
 
 class App extends Component {
 
@@ -58,9 +59,15 @@ class App extends Component {
     getSuggestionValue = suggestion => suggestion.title;
 
     renderSuggestion = suggestion => (
-        <span>
-            {suggestion.title}
-        </span>
+        <a>
+            <img className="searchResult-image" src= {suggestion.img == null ? null: URL_IMG+IMG_SIZE_XSMALL+suggestion.img } />
+            <div className="searchResult-text">
+                <div className="searchResult-name">
+                    {suggestion.title}
+                </div>
+                {suggestion.year}
+            </div>
+        </a>
     );
 
     onChange = (event, { newValue }) => {
@@ -102,7 +109,6 @@ class App extends Component {
                 searchSuggestions: []
             });
         }
-        console.log(this.state);
     };
 
     onSuggestionsClearRequested = () => {
