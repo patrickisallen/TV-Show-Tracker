@@ -7,12 +7,14 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import TDivider from 'material-ui/Divider';
 
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './Login.css';
 
 import Footer from './Footer.js';
+import { Divider } from 'material-ui/Divider';
 
 class Login extends Component {
 
@@ -61,18 +63,18 @@ class Login extends Component {
               { message }
             </div>
           }
-          <TextField
-            hintText="Enter your Username"
-            floatingLabelText="Username"
-            onChange = {(event,newValue) => this.setState({username:newValue})}
-          />
-          <br/>
-          <TextField
-            type="password"
-            hintText="Enter your Password"
-            floatingLabelText="Password"
-            onChange = {(event,newValue) => this.setState({password:newValue})}
-          />
+            <TextField
+              hintText="Enter your Username"
+              floatingLabelText="Username"
+              onChange = {(event,newValue) => this.setState({username:newValue})}
+            />
+            <br/>
+            <TextField
+              type="password"
+              hintText="Enter your Password"
+              floatingLabelText="Password"
+              onChange = {(event,newValue) => this.setState({password:newValue})}
+            />
           <br/>
           <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>
           <p>

@@ -44,8 +44,10 @@ class Create extends Component {
   render() {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <div class="container">
-          <AppBar title="Register"/>
+          <AppBar 
+            title="Register"
+          />
+          <div class="form-container">
             <TextField
               hintText="Enter your Username"
               floatingLabelText="Username"
@@ -66,7 +68,10 @@ class Create extends Component {
               onChange = {(event,newValue) => this.setState({password:newValue})}
               />
             <br/>
-            <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>   
+            <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>
+            <p>
+              Already a member? <Link to="/login"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Login here</Link>
+          </p> 
         </div>
         </MuiThemeProvider>
     );
