@@ -10,6 +10,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
 const IMG_SIZE_XSMALL = 'w45/';
+const IMG_SIZE_SMALL = 'w154/';
 
 
 class App extends Component {
@@ -25,7 +26,8 @@ class App extends Component {
         this.state = {
             movies: [],
             searchText: '',
-            searchSuggestions: []
+            searchSuggestions: [],
+            selectedSuggestion: {}
         };
     }
 
@@ -64,7 +66,7 @@ class App extends Component {
 
     renderSuggestion = suggestion => (
         <a>
-            <img className="searchResult-image" src= {suggestion.img == null ? null: URL_IMG+IMG_SIZE_XSMALL+suggestion.img } />
+            <img className="searchResult-image" src={suggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_XSMALL+suggestion.poster_path } />
             <div className="searchResult-text">
                 <div className="searchResult-name">
                     {suggestion.title}
@@ -98,9 +100,14 @@ class App extends Component {
                 .then(data => {
                     const results = data.map(movie => {
                         let temp = {}
-                        temp.isbn = movie.id
+                        temp.original_name = movie.original_name
+                        temp.id = movie.id
                         temp.title = movie.name
-                        temp.img = movie.poster_path
+                        temp.vote_average = movie.vote_average
+                        temp.poster_path = movie.poster_path
+                        temp.description = movie.overview
+                        temp.first_air_date = movie.first_air_date
+                        temp.popularity = movie.popularity
                         temp.year = (movie.first_air_date == "") ? "0000" : movie.first_air_date.substring(0, 4)
                         return temp;
                     });
@@ -114,6 +121,10 @@ class App extends Component {
             });
         }
     };
+
+    onSuggestionSelected = (event, {suggestion}) => {
+      this.state.selectedSuggestion = suggestion;
+    }
 
     onSuggestionsClearRequested = () => {
         this.setState({
@@ -152,25 +163,37 @@ class App extends Component {
                                 getSuggestionValue={this.getSuggestionValue}
                                 renderSuggestion={this.renderSuggestion}
                                 inputProps={inputProps}
+                                onSuggestionSelected={this.onSuggestionSelected}
                             />
                         </form>
                     </div>
                 </div>
+                <ul style={{listStyle: 'none', color: 'white'}}>
+                  <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
+                  <li>Original Name: {this.state.selectedSuggestion.original_name}</li>
+                  <li>Title: {this.state.selectedSuggestion.title}</li>
+                  <li>Vote Average: {this.state.selectedSuggestion.vote_average}</li>
+                  <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
+                  <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
+                  <li>Description: {this.state.selectedSuggestion.description}</li>
+                </ul>
                 <div class="panel-body">
                     <table class="table table-stripe" id="movie-list">
                         <thead>
                         <tr>
-                            <th>ISBN</th>
+                            <th>Id</th>
                             <th>Title</th>
-                            <th>Author</th>
+                            <th>Year</th>
+                            <th>Average Rating</th>
                         </tr>
                         </thead>
                         <tbody>
                         {this.state.movies.map(movie =>
                             <tr>
-                                <td><Link to={`/show/${movie._id}`}>{movie.isbn}</Link></td>
+                                <td><Link to={`/show/${movie._id}`}>{movie.id}</Link></td>
                                 <td>{movie.title}</td>
-                                <td>{movie.author}</td>
+                                <td>{movie.year}</td>
+                                <td>{movie.poster_path}</td>
                             </tr>
                         )}
                         </tbody>
