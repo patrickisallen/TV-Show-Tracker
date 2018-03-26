@@ -159,7 +159,8 @@ class App extends Component {
           first_air_date: selected.first_air_date,
           popularity: selected.popularity,
           year: selected.year,
-          })
+          });
+      this.componentDidMount();
     };
 
     onSuggestionSelected = (event, {suggestion}) => {
