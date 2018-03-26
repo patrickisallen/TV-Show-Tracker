@@ -123,24 +123,25 @@ class App extends Component {
         }
     };
 
-    onSuggestionSelected = (event, {suggestion}) => {
-      this.state.selectedSuggestion = suggestion;
-    };
-
     onSuggestionsClearRequested = () => {
         this.setState({
             searchSuggestions: []
         });
     };
 
-    isSuggestionEmpty = () => {
-      return this.state.selectedSuggestion.id == null ? true: false;
-    };
-
-    saveToList = () => {
-    };
-
     // SEARCH BAR IMPLEMENTATION -- END
+
+    // Save button implementation
+      isSuggestionEmpty = () => {
+        return this.state.selectedSuggestion.id == null ? true: false;
+      };
+  
+      saveToList = () => {
+      };
+
+      onSuggestionSelected = (event, {suggestion}) => {
+        this.state.selectedSuggestion = suggestion;
+      };
 
     render(){
         const value = this.state.searchText;
