@@ -6,6 +6,7 @@ import './App.css';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
@@ -124,12 +125,19 @@ class App extends Component {
 
     onSuggestionSelected = (event, {suggestion}) => {
       this.state.selectedSuggestion = suggestion;
-    }
+    };
 
     onSuggestionsClearRequested = () => {
         this.setState({
             searchSuggestions: []
         });
+    };
+
+    isSuggestionEmpty = () => {
+      return this.state.selectedSuggestion.id == null ? true: false;
+    };
+
+    saveToList = () => {
     };
 
     // SEARCH BAR IMPLEMENTATION -- END
@@ -168,15 +176,18 @@ class App extends Component {
                         </form>
                     </div>
                 </div>
-                <ul style={{listStyle: 'none', color: 'white'}}>
-                  <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
-                  <li>Original Name: {this.state.selectedSuggestion.original_name}</li>
-                  <li>Title: {this.state.selectedSuggestion.title}</li>
-                  <li>Vote Average: {this.state.selectedSuggestion.vote_average}</li>
-                  <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
-                  <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
-                  <li>Description: {this.state.selectedSuggestion.description}</li>
-                </ul>
+                <div class="panel-quickview">
+                  <ul style={{listStyle: 'none', color: 'white'}}>
+                    <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
+                    <li>Original Name: {this.state.selectedSuggestion.original_name}</li>
+                    <li>Title: {this.state.selectedSuggestion.title}</li>
+                    <li>Vote Average: {this.state.selectedSuggestion.vote_average}</li>
+                    <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
+                    <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
+                    <li>Description: {this.state.selectedSuggestion.description}</li>
+                  </ul>
+                  <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.saveToList(event)}/>
+                </div>
                 <div class="panel-body">
                     <table class="table table-stripe" id="movie-list">
                         <thead>
