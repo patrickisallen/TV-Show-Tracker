@@ -5,7 +5,7 @@ var MovieListSchema = new Schema({
   list: [{
     original_name: String,
     id: Number,
-    name: String,
+    title: String,
     episodes_watched: Number,
     status: String,
     rating: Number

@@ -68,13 +68,18 @@ router.post('/', passport.authenticate('jwt', { session: false}), function(req, 
     if (token) {
       // find user
       User.findOne({token: token}, function(err, user) {
+        if(!user) console.log("Token expired"); // TODO: redirect to login
         // push to user's movielist
-        MovieList.findByIdAndUpdate({_uid: user.movielist}, {$push: {list: req.body}});
+        MovieList.findByIdAndUpdate({_id: user.movielist}, {$push: {list: req.body}},
+        function(err, list) {
+          if(err) console.log(err);
+        });
       });
       // Movie.create(req.body, function (err, post) {
       //   if (err) return next(err);
       //   res.json(post);
       // });
+      res.end();
     } else {
       return res.status(403).send({success: false, msg: 'Unauthorized.'});
     }
