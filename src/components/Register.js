@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -41,9 +43,11 @@ class Create extends Component {
 
   render() {
     return (
-      <MuiThemeProvider>
-        <div class="container">
-          <AppBar title="Register"/>
+      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+          <AppBar 
+            title="Register"
+          />
+          <div class="form-container">
             <TextField
               hintText="Enter your Username"
               floatingLabelText="Username"
@@ -64,8 +68,10 @@ class Create extends Component {
               onChange = {(event,newValue) => this.setState({password:newValue})}
               />
             <br/>
-            <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>   
-          <Footer />
+            <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>
+            <p>
+              Already a member? <Link to="/login"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Login here</Link>
+          </p> 
         </div>
         </MuiThemeProvider>
     );

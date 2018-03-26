@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import TDivider from 'material-ui/Divider';
 
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './Login.css';
 
 import Footer from './Footer.js';
+import { Divider } from 'material-ui/Divider';
 
 class Login extends Component {
 
@@ -49,35 +53,33 @@ class Login extends Component {
   render() {
     const { username, password, message } = this.state;
     return (
-      <MuiThemeProvider>
-        <div class="container">
+      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <AppBar
+          title="Login"
+        />
+        <div class="form-container">
           {message !== '' &&
             <div class="alert alert-warning alert-dismissible" role="alert">
               { message }
             </div>
           }
-          <AppBar
-            title="Login"
-          />
-          <TextField
-            hintText="Enter your Username"
-            floatingLabelText="Username"
-            onChange = {(event,newValue) => this.setState({username:newValue})}
-          />
-          <br/>
-          <TextField
-            type="password"
-            hintText="Enter your Password"
-            floatingLabelText="Password"
-            onChange = {(event,newValue) => this.setState({password:newValue})}
-          />
+            <TextField
+              hintText="Enter your Username"
+              floatingLabelText="Username"
+              onChange = {(event,newValue) => this.setState({username:newValue})}
+            />
+            <br/>
+            <TextField
+              type="password"
+              hintText="Enter your Password"
+              floatingLabelText="Password"
+              onChange = {(event,newValue) => this.setState({password:newValue})}
+            />
           <br/>
           <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>
           <p>
-          Not a member? <Link to="/register"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
+            Not a member? <Link to="/register"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
           </p>
-        
-          <Footer/>
         </div>
       </MuiThemeProvider>      
     );
