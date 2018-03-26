@@ -9,6 +9,7 @@ var MovieSchema = new mongoose.Schema({
     description: String,
     first_air_date: { type: Date },
     popularity: Number,
+    year: Number,
     updated_date: { type: Date, default: Date.now },
   });
 

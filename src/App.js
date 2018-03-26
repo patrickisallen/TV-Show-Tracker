@@ -136,7 +136,23 @@ class App extends Component {
         return this.state.selectedSuggestion.id == null ? true: false;
       };
   
-      saveToList = () => {
+      saveToList = (e) => {
+        e.preventDefault();
+
+        const selected = this.state.selectedSuggestion;
+    
+        axios.post('/api/movie/', 
+          { 
+            original_name: selected.original_name,
+            id: selected.id,
+            name: selected.title,
+            vote_average: selected.vote_average,
+            poster_path: selected.poster_path,
+            description: selected.description,
+            first_air_date: selected.first_air_date,
+            popularity: selected.popularity,
+            year: selected.year,
+           })
       };
 
       onSuggestionSelected = (event, {suggestion}) => {
@@ -193,19 +209,27 @@ class App extends Component {
                     <table class="table table-stripe" id="movie-list">
                         <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>Poster</th>
                             <th>Title</th>
                             <th>Year</th>
                             <th>Average Rating</th>
+                            <th>Popularity</th>
+                            <th>Description</th>
+                            <th>Added On</th>
                         </tr>
                         </thead>
                         <tbody>
                         {this.state.movies.map(movie =>
                             <tr>
-                                <td><Link to={`/show/${movie._id}`}>{movie.id}</Link></td>
-                                <td>{movie.title}</td>
+                                <td>
+                                  <img src={movie.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+movie.poster_path}/>
+                                </td>
+                                <td>{movie.name}</td>
                                 <td>{movie.year}</td>
-                                <td>{movie.poster_path}</td>
+                                <td>{movie.vote_average}</td>
+                                <td>{movie.popularity}</td>
+                                <td>{movie.description}</td>
+                                <td>{movie.updated_date}</td>
                             </tr>
                         )}
                         </tbody>
