@@ -3,10 +3,14 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
 import './App.css';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
 const IMG_SIZE_XSMALL = 'w45/';
+
 
 class App extends Component {
 
@@ -128,7 +132,9 @@ class App extends Component {
             onChange: this.onChange
         };
 
-        return <div class="container">
+        return (
+        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+          <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -172,6 +178,8 @@ class App extends Component {
                 </div>
             </div>
         </div>;
+        </MuiThemeProvider>
+        );
     }
 }
 

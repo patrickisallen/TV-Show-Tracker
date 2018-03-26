@@ -11,7 +11,7 @@ import './Footer.css'
 class Footer extends Component {
 
   onToggle = (e) => {
-    alert("Pretend it is dark theme for now");
+    alert("Pretend it is light theme for now");
   }
 
   render() {
@@ -20,7 +20,7 @@ class Footer extends Component {
         <div class="footer-container">
           <div class="dark-mode-container">
             <Toggle
-            label="Dark Mode"
+            label="Light Mode"
             labelPosition="left"
             onToggle={this.onToggle}
             />
