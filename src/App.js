@@ -7,6 +7,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
+import { error } from 'util';
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
@@ -37,7 +38,6 @@ class App extends Component {
         axios.get('/api/movie')
             .then(res => {
                 this.setState({movies: res.data});
-                console.log(this.state.movies);
             })
             .catch((error) => {
                 if (error.response.status === 401) {
@@ -54,7 +54,6 @@ class App extends Component {
             })
             .then(res => {
                 this.setState({movies: res.data});
-                console.log(this.state.movies);
             })
             .catch((error) => {
                 if (error.response.status === 401) {
@@ -86,7 +85,6 @@ class App extends Component {
     handleSearchSubmit = (event) => {
         event.preventDefault();
         this.searchRequest;
-        console.log(this.state.searchText);
     };
 
     onSuggestionsFetchRequested = ({ value }) => {
@@ -132,32 +130,41 @@ class App extends Component {
     // SEARCH BAR IMPLEMENTATION -- END
 
     // Save button implementation
-      isSuggestionEmpty = () => {
-        return this.state.selectedSuggestion.id == null ? true: false;
-      };
+    isSuggestionEmpty = () => {
+      return this.state.selectedSuggestion.id == null ? true: false;
+    };
+
+    isAlreadySaved = () => {
+      /*
+      const selected_id = this.state.selectedSuggestion.id;
+      axios.get('/api/movie/GETBYID', { selected_id })
+        .then(res => {
+        });
+        */
+    };
+
+    saveToList = (e) => {
+      e.preventDefault();
+
+      const selected = this.state.selectedSuggestion;
   
-      saveToList = (e) => {
-        e.preventDefault();
+      axios.post('/api/movie/', 
+        { 
+          original_name: selected.original_name,
+          id: selected.id,
+          name: selected.title,
+          vote_average: selected.vote_average,
+          poster_path: selected.poster_path,
+          description: selected.description,
+          first_air_date: selected.first_air_date,
+          popularity: selected.popularity,
+          year: selected.year,
+          })
+    };
 
-        const selected = this.state.selectedSuggestion;
-    
-        axios.post('/api/movie/', 
-          { 
-            original_name: selected.original_name,
-            id: selected.id,
-            name: selected.title,
-            vote_average: selected.vote_average,
-            poster_path: selected.poster_path,
-            description: selected.description,
-            first_air_date: selected.first_air_date,
-            popularity: selected.popularity,
-            year: selected.year,
-           })
-      };
-
-      onSuggestionSelected = (event, {suggestion}) => {
-        this.state.selectedSuggestion = suggestion;
-      };
+    onSuggestionSelected = (event, {suggestion}) => {
+      this.state.selectedSuggestion = suggestion;
+    };
 
     render(){
         const value = this.state.searchText;
@@ -203,7 +210,7 @@ class App extends Component {
                     <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
                     <li>Description: {this.state.selectedSuggestion.description}</li>
                   </ul>
-                  <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.saveToList(event)}/>
+                  <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty() || this.isAlreadySaved()} onClick={(event) => this.saveToList(event)}/>
                 </div>
                 <div class="panel-body">
                     <table class="table table-stripe" id="movie-list">
