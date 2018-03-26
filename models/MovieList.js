@@ -3,12 +3,13 @@ var Schema = mongoose.Schema;
 
 var MovieListSchema = new Schema({
   list: [{
-      isbn: String,
-      title: String,
-      progress: String,
-      status: String,
-      rating: Number
-    }]
+    original_name: String,
+    id: Number,
+    name: String,
+    episodes_watched: Number,
+    status: String,
+    rating: Number
+  }]
 });
 
 module.exports = mongoose.model('MovieList', MovieListSchema);

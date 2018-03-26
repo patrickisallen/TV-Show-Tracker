@@ -21,7 +21,8 @@ var UserSchema = new Schema({
   movielist: {
       type: Schema.ObjectId,
       required: true
-  }
+  },
+  token: String
 });
 
 UserSchema.virtual('url')
@@ -58,6 +59,14 @@ UserSchema.methods.comparePassword = function (passw, cb) {
         cb(null, isMatch);
     });
 };
+
+UserSchema.methods.saveToken = function (token) {
+  var user = this;
+  user.token = token;
+  user.save(function(err) {
+    if(err) console.log(err);
+  })
+}
 
 var options = {
     model: 'User',
