@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var User = require('../models/User.js');
 var Movie = require('../models/Movie.js');
+var MovieList = require('../models/MovieList.js');
 var passport = require('passport');
 require('../config/passport')(passport);
 
@@ -64,10 +66,15 @@ router.get('/search', passport.authenticate('jwt', { session: false}), function(
 router.post('/', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
     if (token) {
-      Movie.create(req.body, function (err, post) {
-        if (err) return next(err);
-        res.json(post);
+      // find user
+      User.findOne({token: token}, function(err, user) {
+        // push to user's movielist
+        MovieList.findByIdAndUpdate({_uid: user.movielist}, {$push: {list: req.body}});
       });
+      // Movie.create(req.body, function (err, post) {
+      //   if (err) return next(err);
+      //   res.json(post);
+      // });
     } else {
       return res.status(403).send({success: false, msg: 'Unauthorized.'});
     }

@@ -18,7 +18,8 @@ router.post('/register', function(req, res) {
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        movielist: newMovieList._id
+        movielist: newMovieList._id,
+        token: ""
       });
 
       // save the movielist
@@ -50,6 +51,10 @@ router.post('/register', function(req, res) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
             var token = jwt.sign(user.toJSON(), settings.secret);
+
+            // save token into user
+            user.saveToken(token);
+
             // return the information including token as JSON
             res.json({success: true, token: 'JWT ' + token});
           } else {
