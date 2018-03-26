@@ -1,12 +1,15 @@
 var mongoose = require('mongoose');
 
 var MovieSchema = new mongoose.Schema({
-    isbn: String,
-    title: String,
-    author: String,
+    original_name: String,
+    id: Number,
+    name: String,
+    vote_average: Number,
+    poster_path: String,
     description: String,
-    published_date: { type: Date },
-    publisher: String,
+    first_air_date: { type: Date },
+    popularity: Number,
+    year: Number,
     updated_date: { type: Date, default: Date.now },
   });
 

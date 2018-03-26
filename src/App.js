@@ -6,10 +6,13 @@ import './App.css';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
+import { error } from 'util';
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
 const IMG_SIZE_XSMALL = 'w45/';
+const IMG_SIZE_SMALL = 'w154/';
 
 
 class App extends Component {
@@ -25,7 +28,8 @@ class App extends Component {
         this.state = {
             movies: [],
             searchText: '',
-            searchSuggestions: []
+            searchSuggestions: [],
+            selectedSuggestion: {}
         };
     }
 
@@ -34,7 +38,6 @@ class App extends Component {
         axios.get('/api/movie')
             .then(res => {
                 this.setState({movies: res.data});
-                console.log(this.state.movies);
             })
             .catch((error) => {
                 if (error.response.status === 401) {
@@ -51,7 +54,6 @@ class App extends Component {
             })
             .then(res => {
                 this.setState({movies: res.data});
-                console.log(this.state.movies);
             })
             .catch((error) => {
                 if (error.response.status === 401) {
@@ -64,7 +66,7 @@ class App extends Component {
 
     renderSuggestion = suggestion => (
         <a>
-            <img className="searchResult-image" src= {suggestion.img == null ? null: URL_IMG+IMG_SIZE_XSMALL+suggestion.img } />
+            <img className="searchResult-image" src={suggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_XSMALL+suggestion.poster_path } />
             <div className="searchResult-text">
                 <div className="searchResult-name">
                     {suggestion.title}
@@ -83,7 +85,6 @@ class App extends Component {
     handleSearchSubmit = (event) => {
         event.preventDefault();
         this.searchRequest;
-        console.log(this.state.searchText);
     };
 
     onSuggestionsFetchRequested = ({ value }) => {
@@ -98,9 +99,14 @@ class App extends Component {
                 .then(data => {
                     const results = data.map(movie => {
                         let temp = {}
-                        temp.isbn = movie.id
+                        temp.original_name = movie.original_name
+                        temp.id = movie.id
                         temp.title = movie.name
-                        temp.img = movie.poster_path
+                        temp.vote_average = movie.vote_average
+                        temp.poster_path = movie.poster_path
+                        temp.description = movie.overview
+                        temp.first_air_date = movie.first_air_date
+                        temp.popularity = movie.popularity
                         temp.year = (movie.first_air_date == "") ? "0000" : movie.first_air_date.substring(0, 4)
                         return temp;
                     });
@@ -122,6 +128,44 @@ class App extends Component {
     };
 
     // SEARCH BAR IMPLEMENTATION -- END
+
+    // Save button implementation
+    isSuggestionEmpty = () => {
+      return this.state.selectedSuggestion.id == null ? true: false;
+    };
+
+    isAlreadySaved = () => {
+      /*
+      const selected_id = this.state.selectedSuggestion.id;
+      axios.get('/api/movie/GETBYID', { selected_id })
+        .then(res => {
+        });
+        */
+    };
+
+    saveToList = (e) => {
+      e.preventDefault();
+
+      const selected = this.state.selectedSuggestion;
+  
+      axios.post('/api/movie/', 
+        { 
+          original_name: selected.original_name,
+          id: selected.id,
+          name: selected.title,
+          vote_average: selected.vote_average,
+          poster_path: selected.poster_path,
+          description: selected.description,
+          first_air_date: selected.first_air_date,
+          popularity: selected.popularity,
+          year: selected.year,
+          });
+      this.componentDidMount();
+    };
+
+    onSuggestionSelected = (event, {suggestion}) => {
+      this.state.selectedSuggestion = suggestion;
+    };
 
     render(){
         const value = this.state.searchText;
@@ -152,25 +196,48 @@ class App extends Component {
                                 getSuggestionValue={this.getSuggestionValue}
                                 renderSuggestion={this.renderSuggestion}
                                 inputProps={inputProps}
+                                onSuggestionSelected={this.onSuggestionSelected}
                             />
                         </form>
                     </div>
+                </div>
+                <div class="panel-quickview">
+                  <ul style={{listStyle: 'none', color: 'white'}}>
+                    <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
+                    <li>Original Name: {this.state.selectedSuggestion.original_name}</li>
+                    <li>Title: {this.state.selectedSuggestion.title}</li>
+                    <li>Vote Average: {this.state.selectedSuggestion.vote_average}</li>
+                    <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
+                    <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
+                    <li>Description: {this.state.selectedSuggestion.description}</li>
+                  </ul>
+                  <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty() || this.isAlreadySaved()} onClick={(event) => this.saveToList(event)}/>
                 </div>
                 <div class="panel-body">
                     <table class="table table-stripe" id="movie-list">
                         <thead>
                         <tr>
-                            <th>ISBN</th>
+                            <th>Poster</th>
                             <th>Title</th>
-                            <th>Author</th>
+                            <th>Year</th>
+                            <th>Average Rating</th>
+                            <th>Popularity</th>
+                            <th>Description</th>
+                            <th>Added On</th>
                         </tr>
                         </thead>
                         <tbody>
                         {this.state.movies.map(movie =>
                             <tr>
-                                <td><Link to={`/show/${movie._id}`}>{movie.isbn}</Link></td>
-                                <td>{movie.title}</td>
-                                <td>{movie.author}</td>
+                                <td>
+                                  <img src={movie.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+movie.poster_path}/>
+                                </td>
+                                <td>{movie.name}</td>
+                                <td>{movie.year}</td>
+                                <td>{movie.vote_average}</td>
+                                <td>{movie.popularity}</td>
+                                <td>{movie.description}</td>
+                                <td>{movie.updated_date}</td>
                             </tr>
                         )}
                         </tbody>

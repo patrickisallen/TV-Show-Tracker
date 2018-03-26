@@ -31,12 +31,27 @@ router.get('/', passport.authenticate('jwt', { session: false}), function(req, r
     }
   });
 
+/* GET by specified ID */
+/*
+router.get('/GETBYID', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  var searchString = req.query.selected_id;
+  if (token) {
+    Movie.find({ id: searchString},function (err, movies) {
+        if (err) return next(err);
+        res.json(movies);
+    });
+} else {
+    return res.status(403).send({success: false, msg: 'Unauthorized.'});
+}
+});*/
+
 /* SEARCH MOVIES */
 router.get('/search', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
     var searchString = req.query.title;
     if (token) {
-        Movie.find({'title': searchString},function (err, movies) {
+        Movie.find( { name: searchString},function (err, movies) {
             if (err) return next(err);
             res.json(movies);
         });
