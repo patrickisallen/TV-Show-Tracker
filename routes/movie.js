@@ -36,7 +36,7 @@ router.get('/search', passport.authenticate('jwt', { session: false}), function(
     var token = getToken(req.headers);
     var searchString = req.query.title;
     if (token) {
-        Movie.find({'isbn': searchString},function (err, movies) {
+        Movie.find({'title': searchString},function (err, movies) {
             if (err) return next(err);
             res.json(movies);
         });
