@@ -65,14 +65,14 @@ UserSchema.methods.saveToken = function (token) {
   user.token = token;
   user.save(function(err) {
     if(err) console.log(err);
-  })
-}
+  });
+};
 
 var options = {
     model: 'User',
     startAt: 10000000,
     incrementBy: 1
-}
+};
 UserSchema.plugin(autoIncrement.plugin, options);
 
 module.exports = mongoose.model('User', UserSchema);
