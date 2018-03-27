@@ -147,18 +147,15 @@ class App extends Component {
       e.preventDefault();
 
       const selected = this.state.selectedSuggestion;
-  
-      axios.post('/api/movie/', 
-        { 
+
+      axios.post('/api/movie/',
+        {
           original_name: selected.original_name,
           id: selected.id,
-          name: selected.title,
-          vote_average: selected.vote_average,
-          poster_path: selected.poster_path,
-          description: selected.description,
-          first_air_date: selected.first_air_date,
-          popularity: selected.popularity,
-          year: selected.year,
+          title: selected.title,
+          episodes_watched: 10, // limit by # of total episodes
+          status: "watching", //4 status' (watching, dropped, completed, plan to watch)
+          rating: 5 // 1 - 10 scale
           });
       this.componentDidMount();
     };

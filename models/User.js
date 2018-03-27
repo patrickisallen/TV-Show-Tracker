@@ -21,7 +21,8 @@ var UserSchema = new Schema({
   movielist: {
       type: Schema.ObjectId,
       required: true
-  }
+  },
+  token: String
 });
 
 UserSchema.virtual('url')
@@ -59,11 +60,19 @@ UserSchema.methods.comparePassword = function (passw, cb) {
     });
 };
 
+UserSchema.methods.saveToken = function (token) {
+  var user = this;
+  user.token = token;
+  user.save(function(err) {
+    if(err) console.log(err);
+  });
+};
+
 var options = {
     model: 'User',
     startAt: 10000000,
     incrementBy: 1
-}
+};
 UserSchema.plugin(autoIncrement.plugin, options);
 
 module.exports = mongoose.model('User', UserSchema);
