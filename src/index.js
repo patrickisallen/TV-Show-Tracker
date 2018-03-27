@@ -8,6 +8,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import Login from './components/Login';
 import Register from './components/Register';
+import Landing from './components/Landing';
 
 ReactDOM.render(
   <Router>
@@ -15,6 +16,7 @@ ReactDOM.render(
         <Route exact path='/' component={App} />
         <Route path='/login' component={Login} />
         <Route path='/register' component={Register} />
+        <Route path='/landing' component={Landing} />
       </div>
   </Router>,
   document.getElementById('root')
