@@ -154,6 +154,7 @@ class App extends Component {
           original_name: selected.original_name,
           id: selected.id,
           title: selected.title,
+          poster_path: selected.poster_path,
           episodes_watched: 10, // limit by # of total episodes
           status: "watching", //4 status' (watching, dropped, completed, plan to watch)
           rating: 5 // 1 - 10 scale
@@ -215,27 +216,21 @@ class App extends Component {
                     <table class="table table-stripe" id="movie-list">
                         <thead>
                         <tr>
-                            <th>Poster</th>
+                            // <th>Poster</th>
                             <th>Title</th>
-                            <th>Year</th>
-                            <th>Average Rating</th>
-                            <th>Popularity</th>
-                            <th>Description</th>
-                            <th>Added On</th>
+                            <th>Rating</th>
+                            <th>Progress</th>
                         </tr>
                         </thead>
                         <tbody>
                         {this.state.movies.map(movie =>
                             <tr>
-                                <td>
-                                  <img src={movie.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+movie.poster_path}/>
-                                </td>
-                                <td>{movie.name}</td>
-                                <td>{movie.year}</td>
-                                <td>{movie.vote_average}</td>
-                                <td>{movie.popularity}</td>
-                                <td>{movie.description}</td>
-                                <td>{movie.updated_date}</td>
+                                // <td>
+                                //   <img src={movie.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+movie.poster_path}/>
+                                // </td>
+                                <td>{movie.title}</td>
+                                <td>{movie.rating}</td>
+                                <td>{movie.episodes_watched}</td>
                             </tr>
                         )}
                         </tbody>
