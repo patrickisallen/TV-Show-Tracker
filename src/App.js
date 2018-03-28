@@ -8,6 +8,7 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import { error } from 'util';
+import SuggestionModal from './components/SuggestionModal'
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
@@ -29,7 +30,7 @@ class App extends Component {
             movies: [],
             searchText: '',
             searchSuggestions: [],
-            selectedSuggestion: {}
+            selectedSuggestion: {},
         };
     }
 
@@ -162,6 +163,8 @@ class App extends Component {
 
     onSuggestionSelected = (event, {suggestion}) => {
       this.state.selectedSuggestion = suggestion;
+      suggestionModal = new SuggestionModal(suggestion);
+      suggestionModal.handleclickOpen();
     };
 
     render(){
