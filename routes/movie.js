@@ -24,9 +24,12 @@ getToken = function (headers) {
 router.get('/', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
     if (token) {
-      Movie.find(function (err, movies) {
-        if (err) return next(err);
-        res.json(movies);
+      User.findOne({token: token}, function(err, user) {
+        if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
+        MovieList.findOne({_id: user.movielist}, function(err, movielist) {
+          console.log(movielist.list)
+          res.send(movielist.list);
+        });
       });
       // res.end();
     } else {
@@ -108,10 +111,11 @@ router.post('/', passport.authenticate('jwt', { session: false}), function(req, 
         // TODO: redirect to login
 
         // push to user's movielist
-        MovieList.findByIdAndUpdate({_id: user.movielist}, { $push: {list: req.body} },
-        function(err, list) {
+        MovieList.findByIdAndUpdate(user.movielist, {$push: {list: req.body} }, function(err, movielist) {
           if(err) console.log(err);
-          list.sortList();
+          // movielist.list.push(req.body);
+          // movielist.sortList();
+          // console.log(req.body);
         });
       });
       // Movie.create(req.body, function (err, post) {

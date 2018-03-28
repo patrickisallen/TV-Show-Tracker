@@ -37,6 +37,7 @@ class App extends Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
         axios.get('/api/movie')
             .then(res => {
+                console.log(res.data.toString());
                 this.setState({movies: res.data});
             })
             .catch((error) => {
