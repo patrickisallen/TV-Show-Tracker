@@ -216,7 +216,7 @@ class App extends Component {
                     <table class="table table-stripe" id="movie-list">
                         <thead>
                         <tr>
-                            // <th>Poster</th>
+                            {/* <th>Poster</th> */}
                             <th>Title</th>
                             <th>Rating</th>
                             <th>Progress</th>
@@ -225,9 +225,9 @@ class App extends Component {
                         <tbody>
                         {this.state.movies.map(movie =>
                             <tr>
-                                // <td>
-                                //   <img src={movie.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+movie.poster_path}/>
-                                // </td>
+                                {/* <td>
+                                   <img src={movie.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+movie.poster_path}/>
+                                 </td>*/}
                                 <td>{movie.title}</td>
                                 <td>{movie.rating}</td>
                                 <td>{movie.episodes_watched}</td>
@@ -237,7 +237,7 @@ class App extends Component {
                     </table>
                 </div>
             </div>
-        </div>;
+        </div>
         </MuiThemeProvider>
         );
     }
