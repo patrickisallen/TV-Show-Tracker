@@ -219,7 +219,7 @@ class App extends Component {
                             {/* <th>Poster</th> */}
                             <th>Title</th>
                             <th>Rating</th>
-                            <th>Progress</th>
+                            <th>Episodes Watched</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -245,3 +245,5 @@ class App extends Component {
 
 
 export default App;
+
+

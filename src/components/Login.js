@@ -55,6 +55,12 @@ class Login extends Component {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
         <AppBar
+          titleStyle={{
+            color: '#ffffff',
+            background: '#d32f2f',
+          }}
+          style = {{background: '#d32f2f'}}
+          showMenuIconButton = 'false'
           title="Login"
         />
         <div class="form-container">
@@ -76,7 +82,7 @@ class Login extends Component {
               onChange = {(event,newValue) => this.setState({password:newValue})}
             />
           <br/>
-          <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>
+          <RaisedButton label="Submit" primary={true} style={{background: '#d32f2f'}} onClick={(event) => this.onSubmit(event)}/>
           <p>
             Not a member? <Link to="/register"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
           </p>
