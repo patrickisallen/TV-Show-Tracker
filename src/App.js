@@ -177,6 +177,7 @@ class App extends Component {
 
         return (
         <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <Navigation />
           <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -239,6 +240,23 @@ class App extends Component {
             </div>
         </div>
         </MuiThemeProvider>
+        );
+    }
+}
+
+class Navigation extends Component {
+    render () {
+        return(
+            <header className="Header">
+                <div id="navigation" className="Navigation">
+                <nav>
+                    <ul>
+                        <li><a href="/">My list</a></li>
+                        <li><a href="/">Discover</a></li>
+                    </ul>
+                </nav>
+                </div>
+          </header>
         );
     }
 }
