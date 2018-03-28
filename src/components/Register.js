@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import './Login.css';
 
 import Footer from './Footer.js';
+import redblack from '../themes/redblack';
 
 class Create extends Component {
 
@@ -43,7 +44,7 @@ class Create extends Component {
 
   render() {
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+      <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
           <AppBar 
             title="Register"
           />

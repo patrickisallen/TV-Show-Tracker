@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -15,6 +13,10 @@ import './Login.css';
 
 import Footer from './Footer.js';
 import { Divider } from 'material-ui/Divider';
+
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import redblack from '../themes/redblack';
+
 
 class Login extends Component {
 
@@ -53,7 +55,7 @@ class Login extends Component {
   render() {
     const { username, password, message } = this.state;
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+      <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
         <AppBar
           titleStyle={{
             color: '#ffffff',
