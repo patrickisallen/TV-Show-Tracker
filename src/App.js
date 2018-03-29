@@ -136,13 +136,17 @@ class App extends Component {
     };
 
     isAlreadySaved = () => {
-      /*
-      const selected_id = this.state.selectedSuggestion.id;
-      axios.get('/api/movie/GETBYID', { selected_id })
-        .then(res => {
-        });
-        */
+      for (let i = 0; i < this.state.movies.length; i++){
+        if (String(this.state.movies[i].id) == String(this.state.selectedSuggestion.id)){
+          return true;
+        }
+      }
+      return false;
     };
+
+    saveShouldBeDisabled = () => {
+      return this.isSuggestionEmpty() || this.isAlreadySaved(); 
+    }
 
     saveToList = (e) => {
       e.preventDefault();
@@ -210,7 +214,7 @@ class App extends Component {
                     <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
                     <li>Description: {this.state.selectedSuggestion.description}</li>
                   </ul>
-                  <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty() || this.isAlreadySaved()} onClick={(event) => this.saveToList(event)}/>
+                  <RaisedButton label="Save!" primary={true} disabled={this.saveShouldBeDisabled()} onClick={(event) => this.saveToList(event)}/>
                 </div>
                 <div class="panel-body">
                     <table class="table table-stripe" id="movie-list">
