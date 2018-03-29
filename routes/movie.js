@@ -26,8 +26,8 @@ router.get('/', passport.authenticate('jwt', { session: false}), function(req, r
         if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
         MovieList.findById(user.movielist, function(err, movielist) {
           // console.log(movielist.list);
-          // res.send(movielist.list);
-          res.status(200).send({success: true, data: movielist.list});
+          res.send(movielist.list);
+          // res.send({success: true, list: movielist.list});
         });
       });
     } else {
@@ -42,7 +42,7 @@ router.get('/profile/:uid', function(req, res) {
   User.findById(uid, function(err, user) {
     if(!user) return res.status(403).send({success: false, msg: 'User not found.'});
     MovieList.findById(user.movielist, function(err, movielist) {
-      res.status(200).send({success: true, data: movielist.list});
+      res.send({success: true, list: movielist.list});
     });
   });
 });
@@ -56,8 +56,8 @@ router.post('/remove/:movieid', passport.authenticate('jwt', { session: false}),
       User.findOne({token: token}, function(err, user) {
         if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
         // remove the movie from MovieList
-        MovieList.findById(user.movielist, function(err, movielist) {
-          movielist.removeMovie(movieid);
+        MovieList.findByIdAndUpdate(user.movielist,  {$pull: {list: {id: movieid}}}, function(err, movielist) {
+          if(err) console.log(err);
           res.end();
         });
       });

@@ -37,8 +37,8 @@ class App extends Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
         axios.get('/api/movie')
             .then(res => {
-                console.log(res.data.toString());
-                this.setState({movies: res.data});
+                console.log(res.data.list);
+                this.setState({movies: res.data.list});
             })
             .catch((error) => {
                 if (error.response.status === 401) {
@@ -162,6 +162,15 @@ class App extends Component {
       this.componentDidMount();
     };
 
+    removeFromList = (e) => {
+      e.preventDefault();
+
+      const selected = this.state.selectedSuggestion;
+
+      axios.post('/api/movie/remove/' + selected.id);
+      this.componentDidMount();
+    }
+
     onSuggestionSelected = (event, {suggestion}) => {
       this.state.selectedSuggestion = suggestion;
     };
@@ -211,6 +220,7 @@ class App extends Component {
                     <li>Description: {this.state.selectedSuggestion.description}</li>
                   </ul>
                   <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty() || this.isAlreadySaved()} onClick={(event) => this.saveToList(event)}/>
+                  <RaisedButton label="Remove!" primary={true} onClick={(event) => this.removeFromList(event)}/>
                 </div>
                 <div class="panel-body">
                     <table class="table table-stripe" id="movie-list">
