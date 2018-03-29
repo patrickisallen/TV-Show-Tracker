@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var User = require('../models/User.js');
-// var Movie = require('../models/Movie.js');
 var MovieList = require('../models/MovieList.js');
 var passport = require('passport');
 require('../config/passport')(passport);
