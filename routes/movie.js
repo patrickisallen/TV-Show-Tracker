@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var User = require('../models/User.js');
-var Movie = require('../models/Movie.js');
+// var Movie = require('../models/Movie.js');
 var MovieList = require('../models/MovieList.js');
 var passport = require('passport');
 require('../config/passport')(passport);
@@ -26,8 +26,8 @@ router.get('/', passport.authenticate('jwt', { session: false}), function(req, r
     if (token) {
       User.findOne({token: token}, function(err, user) {
         if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
-        MovieList.findOne({_id: user.movielist}, function(err, movielist) {
-          console.log(movielist.list)
+        MovieList.findById(user.movielist, function(err, movielist) {
+          // console.log(movielist.list);
           res.send(movielist.list);
         });
       });
@@ -38,18 +38,16 @@ router.get('/', passport.authenticate('jwt', { session: false}), function(req, r
   });
 
 /* GET by specified ID */
-// router.get('/search/:movieId', passport.authenticate('jwt', { session: false}), function(req, res) {
-//   var token = getToken(req.headers);
-//   var searchString = req.query.selected_id;
-//   if (token) {
-//     // Movie.find({ id: searchString},function (err, movies) {
-//     //     if (err) return next(err);
-//     //     res.json(movies);
-//     // });
-//   } else {
-//       return res.status(403).send({success: false, msg: 'Unauthorized.'});
-//   }
-// });
+// Non-secure (any user can access this)
+router.get('/profile/:uid', function(req, res) {
+  var uid = req.params.uid;
+  User.findById(uid, function(err, user) {
+    if(!user) return res.status(403).send({success: false, msg: "User does not exist"});
+    MovieList.findById(user.movielist, function(err, movielist) {
+      res.send(movielist.list);
+    });
+  });
+});
 
 /* SEARCH MOVIES */
 // router.get('/search', passport.authenticate('jwt', { session: false}), function(req, res) {
