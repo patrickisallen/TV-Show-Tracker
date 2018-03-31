@@ -35,10 +35,10 @@ class App extends Component {
 
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
-        axios.get('/api/movie')
+        axios.get('/user')
             .then(res => {
-                console.log(res.data.list);
-                this.setState({movies: res.data.list});
+                console.log(res.data);
+                this.setState({movies: res.data});
             })
             .catch((error) => {
                 if (error.response.status === 401) {
@@ -152,7 +152,7 @@ class App extends Component {
       axios.post('/api/movie/',
         {
           original_name: selected.original_name,
-          id: selected.id,
+          _id: selected.id,
           title: selected.title,
           poster_path: selected.poster_path,
           episodes_watched: 10, // limit by # of total episodes
@@ -168,6 +168,19 @@ class App extends Component {
       const selected = this.state.selectedSuggestion;
 
       axios.post('/api/movie/remove/' + selected.id);
+      this.componentDidMount();
+    }
+
+    updateFromList = (e) => {
+      e.preventDefault();
+
+      const selected = this.state.selectedSuggestion;
+
+      axios.post('/api/movie/update/' + selected.id, {
+        episodes_watched: 14, // limit by # of total episodes
+        status: "dropped", //4 status' (watching, dropped, completed, plan to watch)
+        rating: 2 // 1 - 10 scale
+      });
       this.componentDidMount();
     }
 
@@ -220,7 +233,8 @@ class App extends Component {
                     <li>Description: {this.state.selectedSuggestion.description}</li>
                   </ul>
                   <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty() || this.isAlreadySaved()} onClick={(event) => this.saveToList(event)}/>
-                  <RaisedButton label="Remove!" primary={true} onClick={(event) => this.removeFromList(event)}/>
+                  <RaisedButton label="Remove!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.removeFromList(event)}/>
+                  <RaisedButton label="Update!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.updateFromList(event)}/>
                 </div>
                 <div class="panel-body">
                     <table class="table table-stripe" id="movie-list">

@@ -9,6 +9,7 @@ import registerServiceWorker from './registerServiceWorker';
 import Login from './components/Login';
 import Register from './components/Register';
 import Landing from './components/Landing';
+import User from './components/User';
 
 ReactDOM.render(
   <Router>
@@ -17,6 +18,7 @@ ReactDOM.render(
         <Route path='/login' component={Login} />
         <Route path='/register' component={Register} />
         <Route path='/landing' component={Landing} />
+        <Route path='/user/:uid' component={User} />
       </div>
   </Router>,
   document.getElementById('root')

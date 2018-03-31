@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 var MovieListSchema = new Schema({
   list: [{
+    _id: Number,
     original_name: String,
-    id: Number,
     title: String,
     episodes_watched: Number,
     status: String,

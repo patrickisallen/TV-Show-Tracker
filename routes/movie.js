@@ -16,36 +16,6 @@ getToken = function (headers) {
     }
 };
 
-/* Get current user's MovieList */
-router.get('/', passport.authenticate('jwt', { session: false}), function(req, res) {
-    var token = getToken(req.headers);
-    if (token) {
-      // find user
-      User.findOne({token: token}, function(err, user) {
-        if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
-        MovieList.findById(user.movielist, function(err, movielist) {
-          // console.log(movielist.list);
-          res.send(movielist.list);
-          // res.send({success: true, list: movielist.list});
-        });
-      });
-    } else {
-      return res.status(403).send({success: false, msg: 'Unauthorized.'});
-    }
-});
-
-/* Get specific user's MovieList
-  Non-secure (any user can access this) */
-router.get('/profile/:uid', function(req, res) {
-  var uid = req.params.uid;
-  User.findById(uid, function(err, user) {
-    if(!user) return res.status(403).send({success: false, msg: 'User not found.'});
-    MovieList.findById(user.movielist, function(err, movielist) {
-      res.send({success: true, list: movielist.list});
-    });
-  });
-});
-
 /* Remove movie from MovieList */
 router.post('/remove/:movieid', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
@@ -55,9 +25,9 @@ router.post('/remove/:movieid', passport.authenticate('jwt', { session: false}),
       User.findOne({token: token}, function(err, user) {
         if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
         // remove the movie from MovieList
-        MovieList.findByIdAndUpdate(user.movielist,  {$pull: {list: {id: movieid}}}, function(err, movielist) {
+        MovieList.findByIdAndUpdate(user.movielist,  {$pull: {list: {_id: movieid}}}, function(err, movielist) {
           if(err) console.log(err);
-          res.end();
+          res.send({success: true, msg: 'Remove from MovieList.'});
         });
       });
     } else {
@@ -68,37 +38,40 @@ router.post('/remove/:movieid', passport.authenticate('jwt', { session: false}),
 /* Edit movie in MovieList */
 router.post('/update/:movieid', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
+    var movieid = req.params.movieid;
     if(token) {
       // find user
       User.findOne({token: token}, function(err, user) {
         if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
-
-        // update object
-
+        // update movie in MovieList
+        MovieList.findOneAndUpdate({_id: user.movielist, 'list._id': movieid}, {$set: {
+          'list.$.episodes_watched': req.body.episodes_watched,
+          'list.$.status': req.body.status,
+          'list.$.rating': req.body.rating
+        }}, function(err, movie) {
+          if(err) console.log(err);
+          // console.log(movie);
+          res.send({success: true, msg: 'Updated MovieList.'});
+        });
       });
-      res.end();
     } else {
       return res.status(403).send({success: false, msg: 'Unauthorized.'});
     }
 });
 
-/* SAVE MOVIE */
+/* Save movie to user's MovieList */
 router.post('/', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
     if (token) {
       // find user
       User.findOne({token: token}, function(err, user) {
         if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
-
         // push to user's movielist
         MovieList.findByIdAndUpdate(user.movielist, {$push: {list: req.body} }, function(err, movielist) {
           if(err) console.log(err);
-          // movielist.list.push(req.body);
-          // movielist.sortList();
-          // console.log(req.body);
+          res.send({success: true, msg: 'Saved to MovieList.'});
         });
       });
-      res.status(200).send({success: true, msg: 'Saved to MovieList.'})
     } else {
       return res.status(403).send({success: false, msg: 'Unauthorized.'});
     }
