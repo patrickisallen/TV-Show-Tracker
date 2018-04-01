@@ -44,11 +44,12 @@ class Create extends Component {
   render() {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-          <AppBar 
+          <AppBar
             title="Register"
           />
           <div class="form-container">
             <TextField
+              type="email"
               hintText="Enter your Username"
               floatingLabelText="Username"
               onChange = {(event,newValue) => this.setState({username:newValue})}
@@ -56,7 +57,7 @@ class Create extends Component {
             <br/>
             <TextField
               hintText="Enter your Email"
-              type="email"
+              type = "email"
               floatingLabelText="Email"
               onChange = {(event,newValue) => this.setState({email:newValue})}
               />
@@ -71,7 +72,7 @@ class Create extends Component {
             <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.onSubmit(event)}/>
             <p>
               Already a member? <Link to="/login"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Login here</Link>
-          </p> 
+          </p>
         </div>
         </MuiThemeProvider>
     );

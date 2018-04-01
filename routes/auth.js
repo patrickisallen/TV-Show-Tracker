@@ -24,7 +24,7 @@ router.post('/register', function(req, res) {
 
       // save the movielist
       newMovieList.save(function(err) {
-        if (err) throw err
+        if (err) console.log(err);
       });
 
       // save the user
@@ -38,11 +38,8 @@ router.post('/register', function(req, res) {
   });
 
   router.post('/login', function(req, res) {
-    User.findOne({
-      username: req.body.username
-    }, function(err, user) {
-      if (err) throw err;
-
+    User.findOne({username: req.body.username}, function(err, user) {
+      if (err) console.log(err);
       if (!user) {
         res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
       } else {
