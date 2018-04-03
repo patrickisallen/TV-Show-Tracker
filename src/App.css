@@ -142,7 +142,7 @@ body {
   left: 0;
   width: 100vw;
   box-sizing: border-box;
-  z-index: 5;
+  z-index: 0;
 }
 
 .Navigation ul {
