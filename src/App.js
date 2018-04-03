@@ -385,7 +385,9 @@ class UserTable extends Component {
         axios.get('/user')
             .then(res => {
                 console.log(res.data);
-                this.setState({movies: res.data});
+                this.setState({movies: res.data}, () => {
+                    console.log("state updated", this.state)
+                });
             })
             .catch((error) => {
                 if (error.response.status === 401) {
@@ -394,6 +396,20 @@ class UserTable extends Component {
             });
     }
 
+    componentWillReceiveProps(nextProps) {
+        axios.get('/user')
+        .then(res => {
+            console.log(res.data);
+            this.setState({movies: res.data}, () => {
+                console.log("state updated", this.state)
+            });
+        })
+        .catch((error) => {
+            if (error.response.status === 401) {
+                this.props.history.push("/login");
+            }
+        });
+    }
     render () {
         return(
             <div style={styles.propContainer}>
