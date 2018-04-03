@@ -9,6 +9,18 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import { error } from 'util';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+  } from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
+import Toggle from 'material-ui/Toggle';
+
+var createReactClass = require('create-react-class');
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
@@ -200,6 +212,9 @@ class App extends Component {
 
         return (
         <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
+        <div className="Header2">
+            <Navigation />
+        </div>
           <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -237,34 +252,110 @@ class App extends Component {
                   <RaisedButton label="Remove!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.removeFromList(event)}/>
                   <RaisedButton label="Update!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.updateFromList(event)}/>
                 </div>
-                <div class="panel-body">
-                    <table class="table table-stripe" id="movie-list">
-                        <thead>
-                        <tr>
-                            {/* <th>Poster</th> */}
-                            <th>Title</th>
-                            <th>Rating</th>
-                            <th>Progress</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.state.movies.map(movie =>
-                            <tr>
-                                {/* <td>
-                                   <img src={movie.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+movie.poster_path}/>
-                                 </td>*/}
-                                <td>{movie.title}</td>
-                                <td>{movie.rating}</td>
-                                <td>{movie.episodes_watched}</td>
-                            </tr>
-                        )}
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </div>
+        <UserTable />
         </MuiThemeProvider>
         );
+    }
+}
+
+var Navigation = createReactClass({
+    render () {
+        return(
+            <div id="navigation" className="Navigation ">
+            <nav>
+              <ul>
+                <li><a href="/">My list</a></li>
+                <li><a href="/landing">Discover</a></li>
+              </ul>
+            </nav>
+          </div>
+        );
+    }
+})
+
+const styles = {
+    propContainer: {
+      width: 1000,
+      overflow: 'hidden',
+      margin: '20px auto 0',
+    },
+    propToggleHeader: {
+      margin: '20px auto 10px',
+    },
+  };
+
+class UserTable extends Component {
+    state = {
+        fixedHeader: true,
+        fixedFooter: true,
+        stripedRows: true,
+        showRowHover: true,
+        selectable: true,
+        multiSelectable: false,
+        enableSelectAll: false,
+        deselectOnClickaway: true,
+        showCheckboxes: true,
+        displaySelectAll: false,
+        adjustForCheckbox: false,
+        height: '1000px',
+      };
+    
+      handleToggle = (event, toggled) => {
+        this.setState({
+          [event.target.name]: toggled,
+        });
+      };
+    
+      handleChange = (event) => {
+        this.setState({height: event.target.value});
+      };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            movies: [],
+        };
+    }
+
+    componentDidMount() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
+        axios.get('/user')
+            .then(res => {
+                console.log(res.data);
+                this.setState({movies: res.data});
+            })
+            .catch((error) => {
+                if (error.response.status === 401) {
+                    this.props.history.push("/login");
+                }
+            });
+    }
+
+    render () {
+        return(
+            <div style={styles.propContainer}>
+                <Table>
+                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                    <TableRow>
+                        <TableHeaderColumn>Title</TableHeaderColumn>
+                        <TableHeaderColumn>Rating</TableHeaderColumn>
+                        <TableHeaderColumn>Progress</TableHeaderColumn>
+                    </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={false}>
+                    {this.state.movies.map(movie =>
+                        <TableRow>
+                            <TableRowColumn>{movie.title}</TableRowColumn>
+                            <TableRowColumn>{movie.rating}</TableRowColumn>
+                            <TableRowColumn>{movie.episodes_watched}</TableRowColumn>
+                        </TableRow>
+                    )}
+                    </TableBody>
+                </Table>
+            </div>
+        )
     }
 }
 
