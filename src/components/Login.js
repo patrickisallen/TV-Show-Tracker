@@ -16,6 +16,8 @@ import './Login.css';
 import Footer from './Footer.js';
 import { Divider } from 'material-ui/Divider';
 
+import redblack from '../themes/redblack';
+
 class Login extends Component {
 
   constructor() {
@@ -53,7 +55,7 @@ class Login extends Component {
   render() {
     const { username, password, message } = this.state;
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+      <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
         <AppBar
           title="Login"
         />

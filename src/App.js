@@ -4,6 +4,7 @@ import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
 import './App.css';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import redblack from './themes/redblack';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -198,7 +199,7 @@ class App extends Component {
         };
 
         return (
-        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
           <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">

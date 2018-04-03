@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import redblack from '../themes/redblack';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -43,7 +44,7 @@ class Create extends Component {
 
   render() {
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+      <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
           <AppBar
             title="Register"
           />
