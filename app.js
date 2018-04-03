@@ -6,8 +6,8 @@ var bodyParser = require('body-parser');
 
 //Added routes for said APIs
 var movie = require('./routes/movie');
-var movieUnsecure = require('./routes/movie-unsecure');
 var auth = require('./routes/auth');
+var user = require('./routes/user');
 var app = express();
 
 app.use(logger('dev'));
@@ -17,8 +17,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 //added APIs
 app.use('/api/movie', movie);
-app.use('/api/movie-unsecure', movieUnsecure);
 app.use('/api/auth', auth);
+app.use('/user', user);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -35,7 +35,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send('Something broke :(');
 });
 
 var mongoose = require('mongoose');

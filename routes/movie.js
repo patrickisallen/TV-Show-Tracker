@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var User = require('../models/User.js');
-var Movie = require('../models/Movie.js');
 var MovieList = require('../models/MovieList.js');
 var passport = require('passport');
 require('../config/passport')(passport);
@@ -10,122 +9,72 @@ require('../config/passport')(passport);
 getToken = function (headers) {
     if (headers && headers.authorization) {
       var parted = headers.authorization.split(' ');
-      if (parted.length === 2) {
-        return parted[1];
-      } else {
-        return null;
-      }
+      if (parted.length === 2) return parted[1];
+      else return null;
     } else {
       return null;
     }
-  };
+};
 
-/* GET ALL MOVIES */
-router.get('/', passport.authenticate('jwt', { session: false}), function(req, res) {
+/* Remove movie from MovieList */
+router.post('/remove/:movieid', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
-    if (token) {
+    var movieid = req.params.movieid;
+    if(token) {
+      // find user
       User.findOne({token: token}, function(err, user) {
         if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
-        MovieList.findOne({_id: user.movielist}, function(err, movielist) {
-          console.log(movielist.list)
-          res.send(movielist.list);
+        // remove the movie from MovieList
+        MovieList.findByIdAndUpdate(user.movielist,  {$pull: {list: {_id: movieid}}}, function(err, movielist) {
+          if(err) console.log(err);
+          res.send({success: true, msg: 'Remove from MovieList.'});
         });
       });
-      // res.end();
-    } else {
-      return res.status(403).send({success: false, msg: 'Unauthorized.'});
-    }
-  });
-
-/* GET by specified ID */
-// router.get('/search/:movieId', passport.authenticate('jwt', { session: false}), function(req, res) {
-//   var token = getToken(req.headers);
-//   var searchString = req.query.selected_id;
-//   if (token) {
-//     // Movie.find({ id: searchString},function (err, movies) {
-//     //     if (err) return next(err);
-//     //     res.json(movies);
-//     // });
-//   } else {
-//       return res.status(403).send({success: false, msg: 'Unauthorized.'});
-//   }
-// });
-
-/* SEARCH MOVIES */
-// router.get('/search', passport.authenticate('jwt', { session: false}), function(req, res) {
-//     var token = getToken(req.headers);
-//     var searchString = req.query.title;
-//     if (token) {
-//         // Movie.find( { name: searchString},function (err, movies) {
-//         //     if (err) return next(err);
-//         //     res.json(movies);
-//         // });
-//     } else {
-//         return res.status(403).send({success: false, msg: 'Unauthorized.'});
-//     }
-// });
-
-/* Remove MOVIE */
-router.post('/remove/:movieId', passport.authenticate('jwt', { session: false}), function(req, res) {
-    var token = getToken(req.headers);
-    if(token) {
-      // find user
-      User.findOne({token: token}, function(err, user) {
-        if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
-        // TODO: redirect to login
-
-        // update object
-
-      });
-      res.end();
     } else {
       return res.status(403).send({success: false, msg: 'Unauthorized.'});
     }
 });
 
-/* EDIT MOVIE */
-router.post('/update/:movieId', passport.authenticate('jwt', { session: false}), function(req, res) {
+/* Edit movie in MovieList */
+router.post('/update/:movieid', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
+    var movieid = req.params.movieid;
     if(token) {
       // find user
       User.findOne({token: token}, function(err, user) {
         if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
-        // TODO: redirect to login
-
-        // update object
-
+        // update movie in MovieList
+        MovieList.findOneAndUpdate({_id: user.movielist, 'list._id': movieid}, {$set: {
+          'list.$.episodes_watched': req.body.episodes_watched,
+          'list.$.status': req.body.status,
+          'list.$.rating': req.body.rating
+        }}, function(err, movie) {
+          if(err) console.log(err);
+          // console.log(movie);
+          res.send({success: true, msg: 'Updated MovieList.'});
+        });
       });
-      res.end();
     } else {
       return res.status(403).send({success: false, msg: 'Unauthorized.'});
     }
 });
 
-/* SAVE MOVIE */
+/* Save movie to user's MovieList */
 router.post('/', passport.authenticate('jwt', { session: false}), function(req, res) {
     var token = getToken(req.headers);
     if (token) {
       // find user
       User.findOne({token: token}, function(err, user) {
         if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
-        // TODO: redirect to login
-
         // push to user's movielist
         MovieList.findByIdAndUpdate(user.movielist, {$push: {list: req.body} }, function(err, movielist) {
           if(err) console.log(err);
-          // movielist.list.push(req.body);
-          // movielist.sortList();
-          // console.log(req.body);
+          res.send({success: true, msg: 'Saved to MovieList.'});
         });
       });
-      // Movie.create(req.body, function (err, post) {
-      //   if (err) return next(err);
-      //   res.json(post);
-      // });
-      res.end();
     } else {
       return res.status(403).send({success: false, msg: 'Unauthorized.'});
     }
-  });
+});
 
 module.exports = router;

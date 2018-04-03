@@ -4,10 +4,23 @@ import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
 import './App.css';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import redblack from './themes/redblack';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import { error } from 'util';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+  } from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
+import Toggle from 'material-ui/Toggle';
+
+var createReactClass = require('create-react-class');
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
@@ -16,12 +29,6 @@ const IMG_SIZE_SMALL = 'w154/';
 
 
 class App extends Component {
-
-
-    logout = () => {
-        localStorage.removeItem('jwtToken');
-        window.location.reload();
-    };
 
     constructor(props) {
         super(props);
@@ -35,9 +42,9 @@ class App extends Component {
 
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
-        axios.get('/api/movie')
+        axios.get('/user')
             .then(res => {
-                console.log(res.data.toString());
+                console.log(res.data);
                 this.setState({movies: res.data});
             })
             .catch((error) => {
@@ -152,7 +159,7 @@ class App extends Component {
       axios.post('/api/movie/',
         {
           original_name: selected.original_name,
-          id: selected.id,
+          _id: selected.id,
           title: selected.title,
           poster_path: selected.poster_path,
           episodes_watched: 10, // limit by # of total episodes
@@ -161,6 +168,28 @@ class App extends Component {
           });
       this.componentDidMount();
     };
+
+    removeFromList = (e) => {
+      e.preventDefault();
+
+      const selected = this.state.selectedSuggestion;
+
+      axios.post('/api/movie/remove/' + selected.id);
+      this.componentDidMount();
+    }
+
+    updateFromList = (e) => {
+      e.preventDefault();
+
+      const selected = this.state.selectedSuggestion;
+
+      axios.post('/api/movie/update/' + selected.id, {
+        episodes_watched: 14, // limit by # of total episodes
+        status: "dropped", //4 status' (watching, dropped, completed, plan to watch)
+        rating: 2 // 1 - 10 scale
+      });
+      this.componentDidMount();
+    }
 
     onSuggestionSelected = (event, {suggestion}) => {
       this.state.selectedSuggestion = suggestion;
@@ -176,15 +205,16 @@ class App extends Component {
         };
 
         return (
-        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
+        <div className="Header2">
+            <Navigation />
+            <UserButton />
+        </div>
           <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         Movie Collection &nbsp;
-                        {localStorage.getItem('jwtToken') &&
-                        <button class="btn btn-primary" onClick={this.logout}>Logout</button>
-                        }
                     </h3>
                     <div class="searchBar">
                         <form onSubmit={this.handleSearchSubmit}>
@@ -211,35 +241,134 @@ class App extends Component {
                     <li>Description: {this.state.selectedSuggestion.description}</li>
                   </ul>
                   <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty() || this.isAlreadySaved()} onClick={(event) => this.saveToList(event)}/>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-stripe" id="movie-list">
-                        <thead>
-                        <tr>
-                            {/* <th>Poster</th> */}
-                            <th>Title</th>
-                            <th>Rating</th>
-                            <th>Progress</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.state.movies.map(movie =>
-                            <tr>
-                                {/* <td>
-                                   <img src={movie.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+movie.poster_path}/>
-                                 </td>*/}
-                                <td>{movie.title}</td>
-                                <td>{movie.rating}</td>
-                                <td>{movie.episodes_watched}</td>
-                            </tr>
-                        )}
-                        </tbody>
-                    </table>
+                  <RaisedButton label="Remove!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.removeFromList(event)}/>
+                  <RaisedButton label="Update!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.updateFromList(event)}/>
                 </div>
             </div>
         </div>
+        <UserTable />
         </MuiThemeProvider>
         );
+    }
+}
+
+class Navigation extends Component {    
+    render () {
+        return(
+            <div id="navigation" className="Navigation ">
+            <nav>
+              <ul>
+                <li><a href="/">My list</a></li>
+                <li><a href="/landing">Discover</a></li>
+              </ul>
+            </nav>
+          </div>
+        );
+    }
+}
+
+class UserButton extends Component {
+    logout = () => {
+        localStorage.removeItem('jwtToken');
+        window.location.reload();
+    };
+
+    render() {
+        return (
+            <div className="UserProfile">
+            <div className="User">
+              <div className="LogoutButton"> 
+                    {localStorage.getItem('jwtToken') &&
+                            <button class="btn btn-primary" onClick={this.logout}>Logout</button>
+                    }
+              </div>
+            </div>
+          </div>
+        );
+    }
+}
+
+const styles = {
+    propContainer: {
+      width: 1000,
+      overflow: 'hidden',
+      margin: '20px auto 0',
+    },
+    propToggleHeader: {
+      margin: '20px auto 10px',
+    },
+  };
+
+class UserTable extends Component {
+    state = {
+        fixedHeader: true,
+        fixedFooter: true,
+        stripedRows: true,
+        showRowHover: true,
+        selectable: true,
+        multiSelectable: false,
+        enableSelectAll: false,
+        deselectOnClickaway: true,
+        showCheckboxes: true,
+        displaySelectAll: false,
+        adjustForCheckbox: false,
+        height: '1000px',
+      };
+    
+      handleToggle = (event, toggled) => {
+        this.setState({
+          [event.target.name]: toggled,
+        });
+      };
+    
+      handleChange = (event) => {
+        this.setState({height: event.target.value});
+      };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            movies: [],
+        };
+    }
+
+    componentDidMount() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
+        axios.get('/user')
+            .then(res => {
+                console.log(res.data);
+                this.setState({movies: res.data});
+            })
+            .catch((error) => {
+                if (error.response.status === 401) {
+                    this.props.history.push("/login");
+                }
+            });
+    }
+
+    render () {
+        return(
+            <div style={styles.propContainer}>
+                <Table>
+                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                    <TableRow>
+                        <TableHeaderColumn>Title</TableHeaderColumn>
+                        <TableHeaderColumn>Rating</TableHeaderColumn>
+                        <TableHeaderColumn>Progress</TableHeaderColumn>
+                    </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={false}>
+                    {this.state.movies.map(movie =>
+                        <TableRow>
+                            <TableRowColumn>{movie.title}</TableRowColumn>
+                            <TableRowColumn>{movie.rating}</TableRowColumn>
+                            <TableRowColumn>{movie.episodes_watched}</TableRowColumn>
+                        </TableRow>
+                    )}
+                    </TableBody>
+                </Table>
+            </div>
+        )
     }
 }
 
