@@ -17,6 +17,9 @@ import {
     TableRow,
     TableRowColumn,
   } from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
+import Toggle from 'material-ui/Toggle';
+
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
@@ -55,7 +58,7 @@ class App extends Component {
                 }
             });
     }
-    
+
     // SEARCH BAR IMPLEMENTATION
 
     searchRequest = () => {
@@ -253,7 +256,42 @@ class App extends Component {
     }
 }
 
+const styles = {
+    propContainer: {
+      width: 200,
+      overflow: 'hidden',
+      margin: '20px auto 0',
+    },
+    propToggleHeader: {
+      margin: '20px auto 10px',
+    },
+  };
+
 class UserTable extends Component {
+    state = {
+        fixedHeader: true,
+        fixedFooter: true,
+        stripedRows: false,
+        showRowHover: false,
+        selectable: true,
+        multiSelectable: false,
+        enableSelectAll: false,
+        deselectOnClickaway: true,
+        showCheckboxes: true,
+        displaySelectAll: false,
+        adjustForCheckbox: false,
+        height: '250px',
+      };
+    
+      handleToggle = (event, toggled) => {
+        this.setState({
+          [event.target.name]: toggled,
+        });
+      };
+    
+      handleChange = (event) => {
+        this.setState({height: event.target.value});
+      };
 
     constructor(props) {
         super(props);
@@ -278,16 +316,16 @@ class UserTable extends Component {
 
     render () {
         return(
-            <div class="panel-body">
+            <div>
                 <Table>
-                    <TableHeader>
+                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn>Title</TableHeaderColumn>
                         <TableHeaderColumn>Rating</TableHeaderColumn>
                         <TableHeaderColumn>Progress</TableHeaderColumn>
                     </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody displayRowCheckbox={false}>
                     {this.state.movies.map(movie =>
                         <TableRow>
                             <TableRowColumn>{movie.title}</TableRowColumn>
