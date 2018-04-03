@@ -212,7 +212,9 @@ class App extends Component {
 
         return (
         <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
-        <Navigation />
+        <div className="Header2">
+            <Navigation />
+        </div>
           <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -261,7 +263,7 @@ class App extends Component {
 var Navigation = createReactClass({
     render () {
         return(
-            <div id="navigation" className="Navigation">
+            <div id="navigation" className="Navigation ">
             <nav>
               <ul>
                 <li><a href="/">My list</a></li>
@@ -275,7 +277,7 @@ var Navigation = createReactClass({
 
 const styles = {
     propContainer: {
-      width: 200,
+      width: 1000,
       overflow: 'hidden',
       margin: '20px auto 0',
     },
@@ -288,8 +290,8 @@ class UserTable extends Component {
     state = {
         fixedHeader: true,
         fixedFooter: true,
-        stripedRows: false,
-        showRowHover: false,
+        stripedRows: true,
+        showRowHover: true,
         selectable: true,
         multiSelectable: false,
         enableSelectAll: false,
@@ -297,7 +299,7 @@ class UserTable extends Component {
         showCheckboxes: true,
         displaySelectAll: false,
         adjustForCheckbox: false,
-        height: '300px',
+        height: '1000px',
       };
     
       handleToggle = (event, toggled) => {

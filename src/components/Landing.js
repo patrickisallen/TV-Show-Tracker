@@ -41,7 +41,7 @@ var Navigation = createReactClass({
             <nav>
               <ul>
                 <li><a href="/">My list</a></li>
-                <li>Top picks</li>
+                <li><a href="/landing">Discover</a></li>
               </ul>
             </nav>
           </div>
