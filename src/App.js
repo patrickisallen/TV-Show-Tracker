@@ -24,6 +24,7 @@ import Toggle from 'material-ui/Toggle';
 import Modal from './components/Modal';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Tabs, {Tab} from 'material-ui/Tabs';
 
 
 
@@ -175,6 +176,7 @@ class App extends Component {
           rating: 5 // 1 - 10 scale
           });
       this.componentDidMount();
+      this.handleClose();
     };
 
     removeFromList = (e) => {
@@ -184,6 +186,7 @@ class App extends Component {
 
       axios.post('/api/movie/remove/' + selected.id);
       this.componentDidMount();
+      this.handleClose();
     }
 
     updateFromList = (e) => {
@@ -197,10 +200,12 @@ class App extends Component {
         rating: 2 // 1 - 10 scale
       });
       this.componentDidMount();
+      this.handleClose();
     }
 
     onSuggestionSelected = (event, {suggestion}) => {
       this.state.selectedSuggestion = suggestion;
+      this.handleOpen()
     };
 
     handleOpen = () => {
@@ -223,15 +228,21 @@ class App extends Component {
 
         const actions = [
           <FlatButton
-            label="Cancel"
-            primary={true}
-            onClick={this.handleClose}
+            label="Remove"
+            primary={false}
+            onClick={(event) => this.removeFromList(event)}
+          />,
+          <FlatButton
+            label="Update"
+            primary={false}
+            keyboardFocused={true}
+            onClick={(event) => this.updateToList(event)}
           />,
           <FlatButton
             label="Save"
             primary={true}
             keyboardFocused={true}
-            onClick={this.handleClose}
+            onClick={(event) => this.saveToList(event)}
           />,
         ];
         
@@ -262,31 +273,24 @@ class App extends Component {
                     </div>
                 </div>
                 <div class="panel-quickview">
-                  <ul style={{listStyle: 'none', color: 'white'}}>
-                    <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
-                    <li>Original Name: {this.state.selectedSuggestion.original_name}</li>
-                    <li>Title: {this.state.selectedSuggestion.title}</li>
-                    <li>Vote Average: {this.state.selectedSuggestion.vote_average}</li>
-                    <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
-                    <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
-                    <li>Description: {this.state.selectedSuggestion.description}</li>
-                  </ul>
-                  
                   <div>
-                    <RaisedButton label="click me" onClick={this.handleOpen} />
                     <Dialog
-                    title="Dialog With Actions"
+                    title={this.state.selectedSuggestion.title}
                     actions={actions}
                     modal={false}
                     open={this.state.open}
                     onRequestClose={this.handleClose}
                     >
-                      The actions in this window were passed in as an array of React objects.
+                      <ul style={{listStyle: 'none', color: 'white'}}>
+                        <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
+                        <li>Original Name: {this.state.selectedSuggestion.original_name}</li>
+                        <li>Vote Average: {this.state.selectedSuggestion.vote_average}</li>
+                        <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
+                        <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
+                        <li >Description: {this.state.selectedSuggestion.description}</li>
+                      </ul>
                     </Dialog>
                   </div>
-                  <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty() || this.isAlreadySaved()} onClick={(event) => this.saveToList(event)}/>
-                  <RaisedButton label="Remove!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.removeFromList(event)}/>
-                  <RaisedButton label="Update!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.updateFromList(event)}/>
                 </div>
             </div>
         </div>
