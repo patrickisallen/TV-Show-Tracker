@@ -9,6 +9,14 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import { error } from 'util';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+  } from 'material-ui/Table';
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
@@ -47,7 +55,7 @@ class App extends Component {
                 }
             });
     }
-
+    
     // SEARCH BAR IMPLEMENTATION
 
     searchRequest = () => {
@@ -237,34 +245,60 @@ class App extends Component {
                   <RaisedButton label="Remove!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.removeFromList(event)}/>
                   <RaisedButton label="Update!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.updateFromList(event)}/>
                 </div>
-                <div class="panel-body">
-                    <table class="table table-stripe" id="movie-list">
-                        <thead>
-                        <tr>
-                            {/* <th>Poster</th> */}
-                            <th>Title</th>
-                            <th>Rating</th>
-                            <th>Progress</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.state.movies.map(movie =>
-                            <tr>
-                                {/* <td>
-                                   <img src={movie.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+movie.poster_path}/>
-                                 </td>*/}
-                                <td>{movie.title}</td>
-                                <td>{movie.rating}</td>
-                                <td>{movie.episodes_watched}</td>
-                            </tr>
-                        )}
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </div>
+        <UserTable />
         </MuiThemeProvider>
         );
+    }
+}
+
+class UserTable extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            movies: [],
+        };
+    }
+
+    componentDidMount() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
+        axios.get('/user')
+            .then(res => {
+                console.log(res.data);
+                this.setState({movies: res.data});
+            })
+            .catch((error) => {
+                if (error.response.status === 401) {
+                    this.props.history.push("/login");
+                }
+            });
+    }
+
+    render () {
+        return(
+            <div class="panel-body">
+                <Table>
+                    <TableHeader>
+                    <TableRow>
+                        <TableHeaderColumn>Title</TableHeaderColumn>
+                        <TableHeaderColumn>Rating</TableHeaderColumn>
+                        <TableHeaderColumn>Progress</TableHeaderColumn>
+                    </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                    {this.state.movies.map(movie =>
+                        <TableRow>
+                            <TableRowColumn>{movie.title}</TableRowColumn>
+                            <TableRowColumn>{movie.rating}</TableRowColumn>
+                            <TableRowColumn>{movie.episodes_watched}</TableRowColumn>
+                        </TableRow>
+                    )}
+                    </TableBody>
+                </Table>
+            </div>
+        )
     }
 }
 
