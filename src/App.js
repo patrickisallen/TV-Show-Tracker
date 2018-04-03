@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import MyModal from 'react-modal';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
@@ -20,6 +21,12 @@ import {
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 
+import Modal from './components/Modal';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+
+
+
 var createReactClass = require('create-react-class');
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
@@ -36,7 +43,8 @@ class App extends Component {
             movies: [],
             searchText: '',
             searchSuggestions: [],
-            selectedSuggestion: {}
+            selectedSuggestion: {},
+            open: false,
         };
     }
 
@@ -195,6 +203,15 @@ class App extends Component {
       this.state.selectedSuggestion = suggestion;
     };
 
+    handleOpen = () => {
+      console.log("open")
+      this.setState({open: true});
+    }
+  
+    handleClose = () => {
+      this.setState({open: false});
+    }  
+
     render(){
         const value = this.state.searchText;
         const suggestions = this.state.searchSuggestions;
@@ -204,6 +221,20 @@ class App extends Component {
             onChange: this.onChange
         };
 
+        const actions = [
+          <FlatButton
+            label="Cancel"
+            primary={true}
+            onClick={this.handleClose}
+          />,
+          <FlatButton
+            label="Save"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.handleClose}
+          />,
+        ];
+        
         return (
         <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
         <div className="Header2">
@@ -240,6 +271,19 @@ class App extends Component {
                     <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
                     <li>Description: {this.state.selectedSuggestion.description}</li>
                   </ul>
+                  
+                  <div>
+                    <RaisedButton label="click me" onClick={this.handleOpen} />
+                    <Dialog
+                    title="Dialog With Actions"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.open}
+                    onRequestClose={this.handleClose}
+                    >
+                      The actions in this window were passed in as an array of React objects.
+                    </Dialog>
+                  </div>
                   <RaisedButton label="Save!" primary={true} disabled={this.isSuggestionEmpty() || this.isAlreadySaved()} onClick={(event) => this.saveToList(event)}/>
                   <RaisedButton label="Remove!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.removeFromList(event)}/>
                   <RaisedButton label="Update!" primary={true} disabled={this.isSuggestionEmpty()} onClick={(event) => this.updateFromList(event)}/>
