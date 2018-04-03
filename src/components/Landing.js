@@ -68,7 +68,7 @@ var Banner = createReactClass({
         return (
             <div id="hero" className="Hero" style={{backgroundImage: 'url(https://fortunedotcom.files.wordpress.com/2016/04/7339ba26a89e632a7bf135b53b2ba46e17d56050ac661dc320040f3a6a8235e7.jpeg)'}}>
             <div className="content">
-              <img className="logo" src="https://scontent.fyvr4-1.fna.fbcdn.net/v/t34.0-12/29663545_10156406027188939_482502051_n.png?_nc_cat=0&oh=c192cb15ab473aeb8c486f59df7c5668&oe=5ABBDC6C" alt="SV background" />
+              <img className="logo" src="https://i.imgur.com/HWGPhT4.png" alt="SV background" />
               <h2>Season 5 now available</h2>
               <p>In the high-tech gold rush of modern Silicon Valley, the people most qualified to succeed are the least capable of handling success. Partially inspired by Mike Judge’s own experiences as a Silicon Valley engineer in the late ‘80s, Silicon Valley is an American sitcom that centers around six programmers who are living together and trying to make it big in the Silicon Valley.</p>
               <div className="button-wrapper">
