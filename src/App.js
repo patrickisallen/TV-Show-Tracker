@@ -30,12 +30,6 @@ const IMG_SIZE_SMALL = 'w154/';
 
 class App extends Component {
 
-
-    logout = () => {
-        localStorage.removeItem('jwtToken');
-        window.location.reload();
-    };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -214,15 +208,13 @@ class App extends Component {
         <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
         <div className="Header2">
             <Navigation />
+            <UserButton />
         </div>
           <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         Movie Collection &nbsp;
-                        {localStorage.getItem('jwtToken') &&
-                        <button class="btn btn-primary" onClick={this.logout}>Logout</button>
-                        }
                     </h3>
                     <div class="searchBar">
                         <form onSubmit={this.handleSearchSubmit}>
@@ -260,7 +252,7 @@ class App extends Component {
     }
 }
 
-var Navigation = createReactClass({
+class Navigation extends Component {    
     render () {
         return(
             <div id="navigation" className="Navigation ">
@@ -273,7 +265,28 @@ var Navigation = createReactClass({
           </div>
         );
     }
-})
+}
+
+class UserButton extends Component {
+    logout = () => {
+        localStorage.removeItem('jwtToken');
+        window.location.reload();
+    };
+
+    render() {
+        return (
+            <div className="UserProfile">
+            <div className="User">
+              <div className="LogoutButton"> 
+                    {localStorage.getItem('jwtToken') &&
+                            <button class="btn btn-primary" onClick={this.logout}>Logout</button>
+                    }
+              </div>
+            </div>
+          </div>
+        );
+    }
+}
 
 const styles = {
     propContainer: {
