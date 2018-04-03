@@ -20,6 +20,7 @@ import {
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 
+var createReactClass = require('create-react-class');
 
 const API_KEY = "https://api.themoviedb.org/3/search/tv?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US&query=";
 const URL_IMG = 'https://image.tmdb.org/t/p/';
@@ -211,6 +212,7 @@ class App extends Component {
 
         return (
         <MuiThemeProvider muiTheme={getMuiTheme(redblack)}>
+        <Navigation />
           <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -256,6 +258,21 @@ class App extends Component {
     }
 }
 
+var Navigation = createReactClass({
+    render () {
+        return(
+            <div id="navigation" className="Navigation">
+            <nav>
+              <ul>
+                <li><a href="/">My list</a></li>
+                <li><a href="/landing">Discover</a></li>
+              </ul>
+            </nav>
+          </div>
+        );
+    }
+})
+
 const styles = {
     propContainer: {
       width: 200,
@@ -280,7 +297,7 @@ class UserTable extends Component {
         showCheckboxes: true,
         displaySelectAll: false,
         adjustForCheckbox: false,
-        height: '250px',
+        height: '300px',
       };
     
       handleToggle = (event, toggled) => {
@@ -316,7 +333,7 @@ class UserTable extends Component {
 
     render () {
         return(
-            <div>
+            <div style={styles.propContainer}>
                 <Table>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
