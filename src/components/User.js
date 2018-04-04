@@ -15,13 +15,14 @@ class User extends Component {
         console.log(props.match.params.uid);
         super(props);
         this.state = {
+            user: props.match.params.uid,
             movies: []
         };
     }
 
     componentDidMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
-        axios.get('/user')
+        axios.get('/user/' + this.state.user)
             .then(res => {
                 console.log(res.data);
                 this.setState({movies: res.data});

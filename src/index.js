@@ -18,7 +18,7 @@ ReactDOM.render(
         <Route path='/login' component={Login} />
         <Route path='/register' component={Register} />
         <Route path='/landing' component={Landing} />
-        <Route path='/user/:uid' component={User} />
+        <Route exact path='/user/:uid' component={User} />
       </div>
   </Router>,
   document.getElementById('root')

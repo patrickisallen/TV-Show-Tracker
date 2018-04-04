@@ -77,4 +77,23 @@ router.post('/', passport.authenticate('jwt', { session: false}), function(req, 
     }
 });
 
+/* Get movie in MovieList */
+router.get('/:movieid', passport.authenticate('jwt', { session: false}), function(req, res) {
+    var token = getToken(req.headers);
+    if (token) {
+      // find user
+      User.findOne({token: token}, function(err, user) {
+        if(!user) return res.status(403).send({success: false, msg: 'Unauthorized.'});
+        // find movie in user's movielist
+        MovieList.findOne({_id: user.movielist, 'list._id': movieid}, function(err, movielist) {
+          if(err) console.log(err);
+          if(!movielist) res.send({success: true, inmovielist: false});
+          else res.send({success: true, inmovielist: true});
+        });
+      });
+    } else {
+      return res.status(403).send({success: false, msg: 'Unauthorized.'});
+    }
+});
+
 module.exports = router;
