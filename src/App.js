@@ -173,9 +173,10 @@ class App extends Component {
           _id: selected.id,
           title: selected.title,
           poster_path: selected.poster_path,
-          episodes_watched: 10, // limit by # of total episodes
+          episodes_watched: 0,
+          episodes_total: this.state.episodes, // limit by # of total episodes
           status: "watching", //4 status' (watching, dropped, completed, plan to watch)
-          rating: 5 // 1 - 10 scale
+          rating: 0 // 1 - 10 scale
           });
       this.componentDidMount();
       this.handleClose();
@@ -449,7 +450,7 @@ class UserTable extends Component {
                         <TableRow>
                             <TableRowColumn>{movie.title}</TableRowColumn>
                             <TableRowColumn>{movie.rating}</TableRowColumn>
-                            <TableRowColumn>{movie.episodes_watched}</TableRowColumn>
+                            <TableRowColumn>{movie.episodes_watched} / {movie.episodes_total}</TableRowColumn>
                         </TableRow>
                     )}
                     </TableBody>
