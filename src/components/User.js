@@ -31,6 +31,16 @@ class User extends Component {
                 if (error.response.status === 401) {
                     this.props.history.push("/login");
                 }
+                else if (error.response.status === 403) {
+                    const element = (
+                      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+                        <div class="container">
+                          <h1>User not found</h1>
+                        </div>
+                      </MuiThemeProvider>
+                    );
+                    ReactDOM.render(element, document.getElementById('container'));
+                }
             });
     }
 
