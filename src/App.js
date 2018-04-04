@@ -35,6 +35,8 @@ const URL_IMG = 'https://image.tmdb.org/t/p/';
 const IMG_SIZE_XSMALL = 'w45/';
 const IMG_SIZE_SMALL = 'w154/';
 
+const DETAIL_REQ = 'https://api.themoviedb.org/3/tv/'
+const KEY_REQ = '?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US';
 
 class App extends Component {
 
@@ -211,11 +213,31 @@ class App extends Component {
     handleOpen = () => {
       console.log("open")
       this.setState({open: true});
+      this.suggestionQuery();
     }
   
     handleClose = () => {
       this.setState({open: false});
-    }  
+    }
+    
+    suggestionQuery = () => {
+        const selected = this.state.selectedSuggestion;
+        let urlQuery = DETAIL_REQ + selected.id + KEY_REQ;
+        fetch(urlQuery).then((res) => res.json()).then((data) => {
+            this.setState({
+                backdrop: data.backdrop_path,
+                runtime:  data.runtime,
+                poster: data.poster_path,
+                release: data.release_date,
+                genre: data.genres,
+                homepage: data.homepage,
+                movieID: data.id,
+                original_title: data.original_title,
+                episodes : data.number_of_episodes
+            })
+            console.log('Details:' + '--Episodes' + this.state.episodes);
+        })
+    }
 
     render(){
         const value = this.state.searchText;
@@ -288,6 +310,7 @@ class App extends Component {
                         <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
                         <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
                         <li >Description: {this.state.selectedSuggestion.description}</li>
+                        <li>Episodes: {this.state.episodes}</li>
                       </ul>
                     </Dialog>
                   </div>
