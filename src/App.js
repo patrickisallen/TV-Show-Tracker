@@ -447,12 +447,12 @@ class UserTable extends Component {
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
                     {this.state.movies.map(movie =>
-                        <TableRow >
+                        <ClickableRow>
                             <TableRowColumn>{movie.title}</TableRowColumn>
                             <TableRowColumn>{movie.rating}</TableRowColumn>
                             <TableRowColumn>{movie.episodes_watched} / {movie.episodes_total}</TableRowColumn>
                             <TableRowColumn>{movie.status}</TableRowColumn>
-                        </TableRow>
+                        </ClickableRow>
                     )}
                     </TableBody>
                 </Table>
@@ -460,6 +460,19 @@ class UserTable extends Component {
         )
     }
 }
+
+export const ClickableRow = (props) => {
+    // Destructure props to keep the expected MUI TableRow props
+    // while having access to the rowData prop
+    const {rowData, ...restProps} = props;
+    return (
+      <TableRow
+        {...restProps}
+        onMouseDown={()=> {alert('Click event on row')}}>
+        {props.children}
+      </TableRow>
+    )
+  };
 
 
 export default App;
