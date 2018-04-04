@@ -192,7 +192,7 @@ class App extends Component {
       this.handleClose();
     }
 
-    updateFromList = (e) => {
+    updateToList = (e) => {
       e.preventDefault();
 
       const selected = this.state.selectedSuggestion;
@@ -278,8 +278,8 @@ class App extends Component {
           <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">
-                        Movie Collection &nbsp;
+                    <h3 class="panel-title TVHeader">
+                        Your TV Show List &nbsp;
                     </h3>
                     <div class="searchBar">
                         <form onSubmit={this.handleSearchSubmit}>
@@ -295,7 +295,7 @@ class App extends Component {
                         </form>
                     </div>
                 </div>
-                <div class="panel-quickview">
+                <div class="panel-quickview Modal">
                   <div>
                     <Dialog
                     title={this.state.selectedSuggestion.title}
@@ -306,7 +306,6 @@ class App extends Component {
                     >
                       <ul style={{listStyle: 'none', color: 'white'}}>
                         <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
-                        <li>Original Name: {this.state.selectedSuggestion.original_name}</li>
                         <li>Vote Average: {this.state.selectedSuggestion.vote_average}</li>
                         <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
                         <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
@@ -443,14 +442,16 @@ class UserTable extends Component {
                         <TableHeaderColumn>Title</TableHeaderColumn>
                         <TableHeaderColumn>Rating</TableHeaderColumn>
                         <TableHeaderColumn>Progress</TableHeaderColumn>
+                        <TableHeaderColumn>Status</TableHeaderColumn>
                     </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
                     {this.state.movies.map(movie =>
-                        <TableRow>
+                        <TableRow >
                             <TableRowColumn>{movie.title}</TableRowColumn>
                             <TableRowColumn>{movie.rating}</TableRowColumn>
                             <TableRowColumn>{movie.episodes_watched} / {movie.episodes_total}</TableRowColumn>
+                            <TableRowColumn>{movie.status}</TableRowColumn>
                         </TableRow>
                     )}
                     </TableBody>
