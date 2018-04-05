@@ -7,6 +7,7 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import { error } from 'util';
+import ReactDOM from 'react-dom';
 
 class User extends Component {
 
