@@ -27,7 +27,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Tabs, {Tab} from 'material-ui/Tabs';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-
+import {List, ListItem} from 'material-ui/List';
 
 var createReactClass = require('create-react-class');
 
@@ -49,7 +49,7 @@ class App extends Component {
             searchSuggestions: [],
             selectedSuggestion: {},
             open: false,
-            value: "Not set",
+            value: "Watching",
         };
     }
 
