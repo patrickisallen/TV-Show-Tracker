@@ -25,7 +25,8 @@ import Modal from './components/Modal';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Tabs, {Tab} from 'material-ui/Tabs';
-
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 
 
 var createReactClass = require('create-react-class');
@@ -48,6 +49,7 @@ class App extends Component {
             searchSuggestions: [],
             selectedSuggestion: {},
             open: false,
+            value: "Not set",
         };
     }
 
@@ -166,6 +168,7 @@ class App extends Component {
       e.preventDefault();
 
       const selected = this.state.selectedSuggestion;
+      const saveStatus = this.state.value;
 
       axios.post('/api/movie/',
         {
@@ -175,7 +178,7 @@ class App extends Component {
           poster_path: selected.poster_path,
           episodes_watched: 0,
           episodes_total: this.state.episodes, // limit by # of total episodes
-          status: "watching", //4 status' (watching, dropped, completed, plan to watch)
+          status: saveStatus, //4 status' (watching, dropped, completed, plan to watch)
           rating: 0 // 1 - 10 scale
           });
       this.componentDidMount();
@@ -196,10 +199,11 @@ class App extends Component {
       e.preventDefault();
 
       const selected = this.state.selectedSuggestion;
-
+      const updateStatus = this.state.value;
+      
       axios.post('/api/movie/update/' + selected.id, {
         episodes_watched: 14, // limit by # of total episodes
-        status: "dropped", //4 status' (watching, dropped, completed, plan to watch)
+        status: updateStatus, //4 status' (watching, dropped, completed, plan to watch)
         rating: 2 // 1 - 10 scale
       });
       this.componentDidMount();
@@ -240,6 +244,12 @@ class App extends Component {
         })
     }
 
+    handleChange = (event, index, value) => {
+        this.setState({value});
+        console.log("Value of drop menu:" + this.state.value)
+    }
+  
+
     render(){
         const value = this.state.searchText;
         const suggestions = this.state.searchSuggestions;
@@ -267,6 +277,12 @@ class App extends Component {
             keyboardFocused={true}
             onClick={(event) => this.saveToList(event)}
           />,
+          <DropDownMenu value={this.state.value} onChange={this.handleChange}>
+            <MenuItem value={"Completed"} primaryText="Completed" />
+            <MenuItem value={"Watching"} primaryText="Watching" />
+            <MenuItem value={"Plan to watch"} primaryText="Plan to watch" />
+            <MenuItem value={"Dropped"} primaryText="Dropped" />
+          </DropDownMenu>,
         ];
         
         return (
@@ -304,8 +320,8 @@ class App extends Component {
                     open={this.state.open}
                     onRequestClose={this.handleClose}
                     >
+                    <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
                       <ul style={{listStyle: 'none', color: 'white'}}>
-                        <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
                         <li>Vote Average: {this.state.selectedSuggestion.vote_average}</li>
                         <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
                         <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
@@ -424,7 +440,7 @@ class UserTable extends Component {
         .then(res => {
             console.log(res.data);
             this.setState({movies: res.data}, () => {
-                console.log("state updated", this.state)
+                //console.log("state updated", this.state.value)
             });
         })
         .catch((error) => {
@@ -473,6 +489,37 @@ export const ClickableRow = (props) => {
       </TableRow>
     )
   };
+
+// Testing
+
+
+const stylesDrop = {
+  customWidth: {
+    width: 200,
+  },
+};
+
+class DropDown extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {value: "Watching"};
+  }
+
+  render() {
+    return (
+      <div>
+        <DropDownMenu value={this.state.value} onChange={this.handleChange}>
+          <MenuItem value={"Completed"} primaryText="Completed" />
+          <MenuItem value={"Watching"} primaryText="Watching" />
+          <MenuItem value={"Plan to watch"} primaryText="Plan to watch" />
+          <MenuItem value={"Dropped"} primaryText="Dropped" />
+        </DropDownMenu>
+      </div>
+    );
+  }
+}
+
 
 
 export default App;
