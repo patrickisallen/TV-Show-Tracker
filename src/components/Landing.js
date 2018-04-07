@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import './Landing.css';
 
 var createReactClass = require('create-react-class');
@@ -24,7 +24,7 @@ var Landing = createReactClass({
             <div>
                 <header className="Header">
                     <Navigation />
-                    <UserProfile />
+                    <UserButton />
                 </header>
                 <Banner />
                 <TitleList title="Trending now" url='discover/movie?sort_by=popularity.desc&page=1' />
@@ -61,6 +61,28 @@ var UserProfile = createReactClass({
         );
     }
 })
+
+class UserButton extends Component {
+    logout = () => {
+        localStorage.removeItem('jwtToken');
+        window.location.reload();
+    };
+
+    render() {
+        return (
+            <div className="UserProfile">
+            <div className="User">
+              <div className="LogoutButton"> 
+                    {localStorage.getItem('jwtToken') &&
+                            <button class="btn btn-primary" onClick={this.logout}>Logout</button>
+                    }
+              </div>
+            </div>
+          </div>
+        );
+    }
+}
+
 
 
 var Banner = createReactClass({
