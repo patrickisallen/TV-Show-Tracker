@@ -8,7 +8,9 @@ Often times users watch hundreds and possibly thousands of hours of video conten
 
 ## Installation / Set-up
 
-
+1. Modify the Vagrantfile to forward the port desired. 
+2. Run using 'vagrant up' command, this may take a while. 
+3. After downloads and provisioning the VM will be running the webapp. 
 
 ## The Database
 
