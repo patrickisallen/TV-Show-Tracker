@@ -25,8 +25,9 @@ import Modal from './components/Modal';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Tabs, {Tab} from 'material-ui/Tabs';
-
-
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+import {List, ListItem} from 'material-ui/List';
 
 var createReactClass = require('create-react-class');
 
@@ -35,6 +36,8 @@ const URL_IMG = 'https://image.tmdb.org/t/p/';
 const IMG_SIZE_XSMALL = 'w45/';
 const IMG_SIZE_SMALL = 'w154/';
 
+const DETAIL_REQ = 'https://api.themoviedb.org/3/tv/'
+const KEY_REQ = '?api_key=5f9a2ab08c36a2b6a3f27847719a4b8a&language=en-US';
 
 class App extends Component {
 
@@ -46,6 +49,7 @@ class App extends Component {
             searchSuggestions: [],
             selectedSuggestion: {},
             open: false,
+            value: "Watching",
         };
     }
 
@@ -164,6 +168,7 @@ class App extends Component {
       e.preventDefault();
 
       const selected = this.state.selectedSuggestion;
+      const saveStatus = this.state.value;
 
       axios.post('/api/movie/',
         {
@@ -171,9 +176,10 @@ class App extends Component {
           _id: selected.id,
           title: selected.title,
           poster_path: selected.poster_path,
-          episodes_watched: 10, // limit by # of total episodes
-          status: "watching", //4 status' (watching, dropped, completed, plan to watch)
-          rating: 5 // 1 - 10 scale
+          episodes_watched: 0,
+          episodes_total: this.state.episodes, // limit by # of total episodes
+          status: saveStatus, //4 status' (watching, dropped, completed, plan to watch)
+          rating: 0 // 1 - 10 scale
           });
       this.componentDidMount();
       this.handleClose();
@@ -189,14 +195,15 @@ class App extends Component {
       this.handleClose();
     }
 
-    updateFromList = (e) => {
+    updateToList = (e) => {
       e.preventDefault();
 
       const selected = this.state.selectedSuggestion;
-
+      const updateStatus = this.state.value;
+      
       axios.post('/api/movie/update/' + selected.id, {
         episodes_watched: 14, // limit by # of total episodes
-        status: "dropped", //4 status' (watching, dropped, completed, plan to watch)
+        status: updateStatus, //4 status' (watching, dropped, completed, plan to watch)
         rating: 2 // 1 - 10 scale
       });
       this.componentDidMount();
@@ -211,11 +218,37 @@ class App extends Component {
     handleOpen = () => {
       console.log("open")
       this.setState({open: true});
+      this.suggestionQuery();
     }
   
     handleClose = () => {
       this.setState({open: false});
-    }  
+    }
+    
+    suggestionQuery = () => {
+        const selected = this.state.selectedSuggestion;
+        let urlQuery = DETAIL_REQ + selected.id + KEY_REQ;
+        fetch(urlQuery).then((res) => res.json()).then((data) => {
+            this.setState({
+                backdrop: data.backdrop_path,
+                runtime:  data.runtime,
+                poster: data.poster_path,
+                release: data.release_date,
+                genre: data.genres,
+                homepage: data.homepage,
+                movieID: data.id,
+                original_title: data.original_title,
+                episodes : data.number_of_episodes
+            })
+            console.log('Details:' + '--Episodes' + this.state.episodes);
+        })
+    }
+
+    handleChange = (event, index, value) => {
+        this.setState({value});
+        console.log("Value of drop menu:" + this.state.value)
+    }
+  
 
     render(){
         const value = this.state.searchText;
@@ -244,6 +277,12 @@ class App extends Component {
             keyboardFocused={true}
             onClick={(event) => this.saveToList(event)}
           />,
+          <DropDownMenu value={this.state.value} onChange={this.handleChange}>
+            <MenuItem value={"Completed"} primaryText="Completed" />
+            <MenuItem value={"Watching"} primaryText="Watching" />
+            <MenuItem value={"Plan to watch"} primaryText="Plan to watch" />
+            <MenuItem value={"Dropped"} primaryText="Dropped" />
+          </DropDownMenu>,
         ];
         
         return (
@@ -255,8 +294,8 @@ class App extends Component {
           <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">
-                        Movie Collection &nbsp;
+                    <h3 class="panel-title TVHeader">
+                        Your TV Show List &nbsp;
                     </h3>
                     <div class="searchBar">
                         <form onSubmit={this.handleSearchSubmit}>
@@ -272,7 +311,7 @@ class App extends Component {
                         </form>
                     </div>
                 </div>
-                <div class="panel-quickview">
+                <div class="panel-quickview Modal">
                   <div>
                     <Dialog
                     title={this.state.selectedSuggestion.title}
@@ -281,13 +320,13 @@ class App extends Component {
                     open={this.state.open}
                     onRequestClose={this.handleClose}
                     >
+                    <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
                       <ul style={{listStyle: 'none', color: 'white'}}>
-                        <img src={this.state.selectedSuggestion.poster_path == null ? null: URL_IMG+IMG_SIZE_SMALL+this.state.selectedSuggestion.poster_path}/>
-                        <li>Original Name: {this.state.selectedSuggestion.original_name}</li>
                         <li>Vote Average: {this.state.selectedSuggestion.vote_average}</li>
                         <li>First Air Date: {this.state.selectedSuggestion.first_air_date}</li>
                         <li>Popularity: {this.state.selectedSuggestion.popularity}</li>
                         <li >Description: {this.state.selectedSuggestion.description}</li>
+                        <li>Episodes: {this.state.episodes}</li>
                       </ul>
                     </Dialog>
                   </div>
@@ -401,7 +440,7 @@ class UserTable extends Component {
         .then(res => {
             console.log(res.data);
             this.setState({movies: res.data}, () => {
-                console.log("state updated", this.state)
+                //console.log("state updated", this.state.value)
             });
         })
         .catch((error) => {
@@ -419,15 +458,17 @@ class UserTable extends Component {
                         <TableHeaderColumn>Title</TableHeaderColumn>
                         <TableHeaderColumn>Rating</TableHeaderColumn>
                         <TableHeaderColumn>Progress</TableHeaderColumn>
+                        <TableHeaderColumn>Status</TableHeaderColumn>
                     </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
                     {this.state.movies.map(movie =>
-                        <TableRow>
+                        <ClickableRow>
                             <TableRowColumn>{movie.title}</TableRowColumn>
                             <TableRowColumn>{movie.rating}</TableRowColumn>
-                            <TableRowColumn>{movie.episodes_watched}</TableRowColumn>
-                        </TableRow>
+                            <TableRowColumn>{movie.episodes_watched} / {movie.episodes_total}</TableRowColumn>
+                            <TableRowColumn>{movie.status}</TableRowColumn>
+                        </ClickableRow>
                     )}
                     </TableBody>
                 </Table>
@@ -435,6 +476,50 @@ class UserTable extends Component {
         )
     }
 }
+
+export const ClickableRow = (props) => {
+    // Destructure props to keep the expected MUI TableRow props
+    // while having access to the rowData prop
+    const {rowData, ...restProps} = props;
+    return (
+      <TableRow
+        {...restProps}
+        onMouseDown={()=> {alert('Click event on row')}}>
+        {props.children}
+      </TableRow>
+    )
+  };
+
+// Testing
+
+
+const stylesDrop = {
+  customWidth: {
+    width: 200,
+  },
+};
+
+class DropDown extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {value: "Watching"};
+  }
+
+  render() {
+    return (
+      <div>
+        <DropDownMenu value={this.state.value} onChange={this.handleChange}>
+          <MenuItem value={"Completed"} primaryText="Completed" />
+          <MenuItem value={"Watching"} primaryText="Watching" />
+          <MenuItem value={"Plan to watch"} primaryText="Plan to watch" />
+          <MenuItem value={"Dropped"} primaryText="Dropped" />
+        </DropDownMenu>
+      </div>
+    );
+  }
+}
+
 
 
 export default App;
