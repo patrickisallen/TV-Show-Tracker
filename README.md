@@ -109,8 +109,8 @@ Search: Game of Thrones
 
 ## Citation/References
 
-Components (package dependency installed and modified to fit use): www.material-ui.com
-Banner and logo on discovery page: https://www.hbo.com/corpinfo/international/hbocanada.html
-Authentication framework provided by: http://www.passportjs.org/
-Discovery page tutorial repurposed from: https://www.fullstackreact.com/react-daily-ui/003-landing-page/
+Components (package dependency installed and modified to fit use): www.material-ui.com  
+Banner and logo on discovery page: https://www.hbo.com/corpinfo/international/hbocanada.html  
+Authentication framework provided by: http://www.passportjs.org/  
+Discovery page tutorial repurposed from: https://www.fullstackreact.com/react-daily-ui/003-landing-page/  
 
