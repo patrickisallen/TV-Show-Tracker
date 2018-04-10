@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
 
 #                                              Edit this port here
 #                                                       v
-  config.vm.network :forwarded_port, guest: 3000, host:3000
+  config.vm.network :forwarded_port, guest: 3000, host:8260
 
 
   config.vm.provision :shell, path: "vagrantscript.sh"
