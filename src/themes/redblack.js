@@ -1,9 +1,5 @@
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import baseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import * as Colors from 'material-ui/styles/colors';
-import { fade } from 'material-ui/utils/colorManipulator'
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import merge from 'lodash.merge';
 
 const muiTheme = {
     "palette": {

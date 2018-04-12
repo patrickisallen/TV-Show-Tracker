@@ -1,20 +1,15 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React, {Component} from 'react';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import TDivider from 'material-ui/Divider';
+import {Divider} from 'material-ui/Divider';
 
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import './Login.css';
-
-import Footer from './Footer.js';
-import { Divider } from 'material-ui/Divider';
 
 import redblack from '../themes/redblack';
 

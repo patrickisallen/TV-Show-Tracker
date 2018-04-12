@@ -1,19 +1,14 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import redblack from '../themes/redblack';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-
-import ReactDOM from 'react-dom';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import './Login.css';
-
-import Footer from './Footer.js';
 
 class Create extends Component {
 
